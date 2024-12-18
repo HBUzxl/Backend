@@ -79,7 +79,7 @@ DELETE /api/v1/files/:id         - 删除文件
 GET    /api/v1/files/:id         - 获取文件
 ```
 
-## 数据结构
+## 数据库表结构
 
 1. User表
 
