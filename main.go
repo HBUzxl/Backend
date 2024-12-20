@@ -1,9 +1,8 @@
 package main
 
 import (
-	"OnlineDignosisSystem/backend/config"
-	"OnlineDignosisSystem/backend/middleware"
-	"OnlineDignosisSystem/backend/routes"
+	"backend/config"
+	"backend/handlers"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -13,17 +12,17 @@ func main() {
 	// 初始化Gin引擎
 	r := gin.Default()
 
-	// 加载配置
-	config.LoadConfig()
+	// 初始化配置
+	config.InitConfig()
 
 	// 使用中间件
-	r.Use(middleware.Cors())
 
 	// 初始化路由
-	routes.SetupRoutes(r)
+	r.POST("/login", handlers.Login)
 
-	// 启动服务器
-	if err := r.Run(":8080"); err != nil {
-		log.Fatalf("Server failed to start: %v", err)
+	// 启动服务
+	if err := r.Run(":8085"); err != nil {
+		log.Fatal("服务启动失败:", err)
 	}
+	log.Println("服务启动成功")
 }

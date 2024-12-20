@@ -1,53 +1,48 @@
 package handlers
 
 import (
+	"backend/config"
+	"backend/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-func Login(c *gin.Context) {
-	var loginRequest struct {
-		Username string `json:"username" binding:"required"`
-		Password string `json:"password" binding:"required"`
-	}
-
-	if err := c.ShouldBindJSON(&loginRequest); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	// TODO: 实现登录逻辑
-	// 1. 验证用户凭据
-	// 2. 确定用户角色
-	// 3. 生成JWT token
-	// 4. 返回token和用户信息
-
-	c.JSON(http.StatusOK, gin.H{
-		"token": "sample_token",
-		"role":  "patient", // 或 "doctor" 或 "admin"
-	})
+type LoginRequest struct {
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }
 
-func Register(c *gin.Context) {
-	var registerRequest struct {
-		Username string `json:"username" binding:"required"`
-		Password string `json:"password" binding:"required"`
-		Role     string `json:"role" binding:"required"`
-	}
-
-	if err := c.ShouldBindJSON(&registerRequest); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+func Login(c *gin.Context) {
+	var req LoginRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "无效的请求参数",
+		})
 		return
 	}
 
-	// TODO: 实现注册逻辑
-	// 1. 验证用户数据
-	// 2. 检查用户名是否已存在
-	// 3. 创建新用户
-	// 4. 返回成功消息
+	var user models.User
+	result := config.DB.Where("username = ? AND password = ?", req.Username, req.Password).First(&user)
+	if result.Error != nil {
+		if result.Error == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error": "用户名或密码错误",
+			})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "服务器内部错误",
+		})
+		return
+	}
 
-	c.JSON(http.StatusCreated, gin.H{
-		"message": "User registered successfully",
+	c.JSON(http.StatusOK, gin.H{
+		"message": "登录成功",
+		"user": gin.H{
+			"id":       user.ID,
+			"username": user.Username,
+		},
 	})
 }
