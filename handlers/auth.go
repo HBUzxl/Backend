@@ -34,13 +34,13 @@ func Login(c *gin.Context) {
 
 	if req.Role == "admin" {
 		var admin models.Admin
-		result = config.DB.Where("username = ? AND role = ?", req.Username, "admin").First(&admin)
+		result = config.DB.Where("username = ? AND password = ? AND role = ?", req.Username, req.Password, "admin").First(&admin)
 	} else if req.Role == "allocator" {
 		var allocator models.Allocator
-		result = config.DB.Where("username = ? AND role = ?", req.Username, "allocator").First(&allocator)
+		result = config.DB.Where("username = ? AND password = ? AND role = ?", req.Username, req.Password, "allocator").First(&allocator)
 	} else if req.Role == "expert" {
 		var expert models.Expert
-		result = config.DB.Where("username = ? AND role = ?", req.Username, "expert").First(&expert)
+		result = config.DB.Where("username = ? AND password = ? AND role = ?", req.Username, req.Password, "expert").First(&expert)
 	}
 
 	if result.Error != nil {

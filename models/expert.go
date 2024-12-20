@@ -15,4 +15,7 @@ type Expert struct {
 	CreatedAt time.Time      `gorm:"autoCreateTime"`
 	UpdatedAt time.Time      `gorm:"autoUpdateTime"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
+
+	// 关联字段
+	Cases []Case `gorm:"foreignKey:ExpertID; references:Id;"`
 }

@@ -24,10 +24,12 @@ func InitDB() {
 	if err != nil {
 		log.Fatalf("数据库连接失败: %v", err)
 	}
-	DB.AutoMigrate(&models.User{})
 	DB.AutoMigrate(&models.Admin{})
 	DB.AutoMigrate(&models.Expert{})
 	DB.AutoMigrate(&models.Allocator{})
+	DB.AutoMigrate(&models.Case{})
+	DB.AutoMigrate(&models.Slice{})
+	DB.AutoMigrate(&models.Attachment{})
 
 	fmt.Println("数据库连接成功")
 }
