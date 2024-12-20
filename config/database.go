@@ -25,5 +25,9 @@ func InitDB() {
 		log.Fatalf("数据库连接失败: %v", err)
 	}
 	DB.AutoMigrate(&models.User{})
+	DB.AutoMigrate(&models.Admin{})
+	DB.AutoMigrate(&models.Expert{})
+	DB.AutoMigrate(&models.Allocator{})
+
 	fmt.Println("数据库连接成功")
 }
