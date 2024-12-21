@@ -33,6 +33,9 @@ type Case struct {
 
 	PrintCount int `json:"printCount"` //打印次数
 
+	//病例状态
+	CaseStatus string `json:"caseStatus"` //病例状态
+
 	//关联专家
 	ExpertID uint   `json:"expertID" gorm:"index"`                            //专家ID
 	Expert   Expert `json:"expert" gorm:"foreignKey:ExpertID; references:Id"` //专家
