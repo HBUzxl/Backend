@@ -16,15 +16,18 @@ func InitRoutes(r *gin.Engine) {
 	})
 
 	// API 路由组
-	api := r.Group("/api") {
+	api := r.Group("/api")
+	{
 		// 认证相关路由
-		auth := api.Group("/auth") {
+		auth := api.Group("/auth")
+		{
 			auth.POST("/login", handlers.Login)
 		}
 
 		// 病例相关路由
-		case := api.Group("/case") {
-			case.POST("/unsubmitted", handlers.GetUnsubmitCasesHandler)
+		caseGroup := api.Group("/case")
+		{
+			caseGroup.POST("/unsubmitted", handlers.GetUnsubmitCasesHandler)
 		}
 	}
 }
