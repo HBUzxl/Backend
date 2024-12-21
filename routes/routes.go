@@ -45,5 +45,12 @@ func InitRoutes(r *gin.Engine) {
 			// sliceGroup.DELETE("/:sliceID", handlers.DeleteSliceHandler)
 		}
 
+		// 附件相关路由
+		attachmentGroup := api.Group("/attachment")
+		{
+			attachmentGroup.POST("/upload", handlers.UploadAttachmentHandler)
+			// attachmentGroup.GET("/:caseID", handlers.GetAttachmentsHandler)
+			// attachmentGroup.DELETE("/:attachmentID", handlers.DeleteAttachmentHandler)
+		}
 	}
 }
