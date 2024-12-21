@@ -5,6 +5,7 @@ import (
 	"backend/models"
 )
 
+// GetUnsubmitCases 获取未提交的病例
 func GetUnsubmitCases() ([]models.Case, error) {
 	var cases []models.Case
 
@@ -21,6 +22,7 @@ func GetUnsubmitCases() ([]models.Case, error) {
 	return cases, nil
 }
 
+// GetCaseByCaseID 根据病例ID获取病例
 func GetCaseByCaseID(caseID string) (*models.Case, error) {
 	var caseData models.Case
 	err := config.DB.
@@ -33,4 +35,15 @@ func GetCaseByCaseID(caseID string) (*models.Case, error) {
 		return nil, err
 	}
 	return &caseData, nil
+}
+
+// UpdateCaseStatus 更新病例状态
+func UpdateCaseStatus(caseID string, status string) error {
+	var caseData models.Case
+	err := config.DB.Where("case_id = ?", caseID).First(&caseData).Error
+	if err != nil {
+		return err
+	}
+	caseData.CaseStatus = status
+	return config.DB.Save(&caseData).Error
 }

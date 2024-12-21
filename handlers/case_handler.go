@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetUnsubmitCasesHandler 获取未提交的病例
 func GetUnsubmitCasesHandler(c *gin.Context) {
 	cases, err := services.GetUnsubmitCases()
 	if err != nil {
@@ -20,6 +21,7 @@ func GetUnsubmitCasesHandler(c *gin.Context) {
 	})
 }
 
+// GetCaseByCaseIDHandler 根据病例ID获取病例
 func GetCaseByCaseIDHandler(c *gin.Context) {
 	caseID := c.Param("caseID")
 	if caseID == "" {
@@ -33,4 +35,20 @@ func GetCaseByCaseIDHandler(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"case": caseData})
+}
+
+// UpdateUnsubmitCaseHandler 更新未提交的病例
+func UpdateUnsubmitCaseHandler(c *gin.Context) {
+	caseID := c.Param("caseID")
+	if caseID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing caseID"})
+		return
+	}
+	status := "pendingdiagnosis"
+	err := services.UpdateCaseStatus(caseID, status)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Update Case Status " + err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Update Case Status Success"})
 }
