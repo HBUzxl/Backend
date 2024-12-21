@@ -36,5 +36,14 @@ func InitRoutes(r *gin.Engine) {
 		{
 			expertGroup.GET("/", handlers.GetExpertsHandler)
 		}
+
+		// 切片相关路由
+		sliceGroup := api.Group("/slice")
+		{
+			sliceGroup.POST("/upload", handlers.UploadSliceHandler)
+			// sliceGroup.GET("/:caseID", handlers.GetSlicesHandler)
+			// sliceGroup.DELETE("/:sliceID", handlers.DeleteSliceHandler)
+		}
+
 	}
 }

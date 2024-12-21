@@ -3,15 +3,15 @@ package models
 type Case struct {
 	Id uint `json:"id" gorm:"unique; AUTO_INCREMENT"` // ID
 
-	CaseID        string `json:"caseID"`        //病例号
-	PatientName   string `json:"patientName"`   //病人姓名
-	PatientGender string `json:"patientGender"` //病人性别
-	PatientAge    int    `json:"patientAge"`    //病人年龄
-	PatientPhone  string `json:"patientPhone"`  //病人电话
-	PatientType   string `json:"patientType"`   //病人类型
-	BiopsySite    string `json:"biopsySite"`    //取材部位
-	TissueCount   int    `json:"tissueCount"`   //组织数量
-	BarCode       string `json:"barCode"`       //条形码
+	CaseID        string `json:"caseID" gorm:"type:varchar(255); unique"` //病例号
+	PatientName   string `json:"patientName"`                             //病人姓名
+	PatientGender string `json:"patientGender"`                           //病人性别
+	PatientAge    int    `json:"patientAge"`                              //病人年龄
+	PatientPhone  string `json:"patientPhone"`                            //病人电话
+	PatientType   string `json:"patientType"`                             //病人类型
+	BiopsySite    string `json:"biopsySite"`                              //取材部位
+	TissueCount   int    `json:"tissueCount"`                             //组织数量
+	BarCode       string `json:"barCode"`                                 //条形码
 
 	CheckupNo     string `json:"checkupNo"`     //体检编号
 	ClinicalPhone string `json:"clinicalPhone"` //临床电话
@@ -41,8 +41,8 @@ type Case struct {
 	Expert   Expert `json:"expert" gorm:"foreignKey:ExpertID; references:Id"` //专家
 
 	//关联切片
-	Slices []Slice `json:"slices" gorm:"foreignKey:CaseID; references:Id"` //切片
+	Slices []Slice `json:"slices" gorm:"foreignKey:CaseID; references:CaseID"` //切片
 
 	//关联附件
-	Attachments []Attachment `json:"attachments" gorm:"foreignKey:CaseID; references:Id"` //附件
+	Attachments []Attachment `json:"attachments" gorm:"foreignKey:CaseID; references:CaseID"` //附件
 }

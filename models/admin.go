@@ -8,7 +8,7 @@ import (
 
 type Admin struct {
 	Id        uint           `json:"id" gorm:"unique; AUTO_INCREMENT"`
-	Username  string         `json:"username" gorm:"unique"`
+	Username  string         `json:"username" gorm:"unique; type:varchar(255)"`
 	Password  string         `json:"password"`
 	Role      string         `json:"role"`
 	NickName  string         `json:"nickName"`

@@ -1,10 +1,10 @@
 package models
 
 type Slice struct {
-	Id          uint   `json:"id" gorm:"unique; AUTO_INCREMENT"` // ID
-	SliceNumber int    `json:"sliceNumber"`                      // 切片号
-	FileName    string `json:"fileName"`                         // 文件名
-	FilePath    string `json:"filePath"`                         // 文件路径
-	FileSize    int64  `json:"fileSize"`                         // 文件大小
-	CaseID      uint   `json:"caseID"`                           // 患者ID
+	Id       uint   `json:"id" gorm:"AUTO_INCREMENT"`          // ID
+	SliceID  string `json:"sliceID" gorm:"type:varchar(50)"`   // 切片号
+	FileName string `json:"fileName" gorm:"type:varchar(255)"` // 文件名
+	FilePath string `json:"filePath" gorm:"type:varchar(255)"` // 文件路径
+	FileSize int64  `json:"fileSize"`                          // 文件大小
+	CaseID   string `json:"caseID" gorm:"type:varchar(255)"`   // 病例ID
 }
