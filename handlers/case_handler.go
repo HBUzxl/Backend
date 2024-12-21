@@ -52,3 +52,19 @@ func UpdateUnsubmitCaseHandler(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Update Case Status Success"})
 }
+
+// UpdatePendingCaseHandler 更新状态：待诊断到已诊断
+func UpdatePendingCaseHandler(c *gin.Context) {
+	caseID := c.Param("caseID")
+	if caseID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing caseID"})
+		return
+	}
+	status := "diagnosed"
+	err := services.UpdateCaseStatus(caseID, status)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Update Case Status " + err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Update Case Status Success"})
+}
