@@ -28,6 +28,13 @@ func InitRoutes(r *gin.Engine) {
 		caseGroup := api.Group("/case")
 		{
 			caseGroup.POST("/unsubmitted", handlers.GetUnsubmitCasesHandler)
+			caseGroup.GET("/:caseID", handlers.GetCaseByCaseIDHandler)
+		}
+
+		// 专家相关路由
+		expertGroup := api.Group("/expert")
+		{
+			expertGroup.GET("/", handlers.GetExpertsHandler)
 		}
 	}
 }
