@@ -29,8 +29,10 @@ func InitRoutes(r *gin.Engine) {
 		{
 			caseGroup.POST("/unsubmitted", handlers.GetUnsubmitCasesHandler)
 			caseGroup.GET("/:caseID", handlers.GetCaseByCaseIDHandler)
-			caseGroup.POST("/unsubmit2pendingdiagnosis/:caseID", handlers.UpdateUnsubmitCaseHandler)
-			caseGroup.POST("/pendingdiagnosis2diagnosed/:caseID", handlers.UpdatePendingCaseHandler)
+			caseGroup.POST("/toPendingdiagnosis/:caseID", handlers.UpdatePendingCaseHandler)
+			caseGroup.POST("/toDiagnosed/:caseID", handlers.UpdateDiagnosedCaseHandler)
+			caseGroup.POST("/toReturned/:caseID", handlers.UpdateReturnedCaseHandler)
+			caseGroup.POST("/toWithdraw/:caseID", handlers.UpdateWithdrawCaseHandler)
 		}
 
 		// 专家相关路由
