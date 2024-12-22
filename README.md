@@ -34,7 +34,7 @@ backend/
 POST /api/v1/auth/login          - 用户登录
 POST /api/v1/auth/logout         - 用户登出
 GET  /api/v1/auth/profile        - 获取当前用户信息
-PUT  /api/v1/auth/password       - 修改密码
+POST  /api/v1/auth/password       - 修改密码
 ```
 
 2. 用户管理相关 API (/api/v1/users) (管理员权限)
@@ -42,8 +42,8 @@ PUT  /api/v1/auth/password       - 修改密码
 GET    /api/v1/users             - 获取用户列表
 POST   /api/v1/users             - 创建新用户
 GET    /api/v1/users/:id         - 获取特定用户信息
-PUT    /api/v1/users/:id         - 更新用户信息
-DELETE /api/v1/users/:id         - 删除用户
+POST    /api/v1/users/:id         - 更新用户信息
+POST /api/v1/users/:id         - 删除用户
 GET    /api/v1/users/experts     - 获取专家列表
 ```
 
@@ -52,7 +52,7 @@ GET    /api/v1/users/experts     - 获取专家列表
 GET    /api/v1/diagnoses              - 获取诊断列表
 GET    /api/v1/diagnoses/assigned     - 获取分配给我的诊断
 POST   /api/v1/diagnoses/:caseId      - 提交诊断结果
-PUT    /api/v1/diagnoses/:id          - 更新诊断结果
+POST    /api/v1/diagnoses/:id          - 更新诊断结果
 GET    /api/v1/diagnoses/:id/history  - 获取诊断历史记录
 ```
 
