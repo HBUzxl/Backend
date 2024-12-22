@@ -58,8 +58,7 @@ func UpdatePendingCaseHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing caseID"})
 		return
 	}
-	status := "pendingdiagnosis"
-	err := services.UpdateCaseStatus(caseID, status)
+	err := services.UpdateCaseToPendingDiagnosis(caseID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Update Case Status " + err.Error()})
 		return
@@ -74,8 +73,7 @@ func UpdateDiagnosedCaseHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing caseID"})
 		return
 	}
-	status := "diagnosed"
-	err := services.UpdateCaseStatus(caseID, status)
+	err := services.UpdateCaseToDiagnosed(caseID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Update Case Status " + err.Error()})
 		return
@@ -90,8 +88,7 @@ func UpdateReturnedCaseHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing caseID"})
 		return
 	}
-	status := "returned"
-	err := services.UpdateCaseStatus(caseID, status)
+	err := services.UpdateCaseToReturned(caseID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Update Case Status " + err.Error()})
 		return
@@ -106,8 +103,7 @@ func UpdateWithdrawCaseHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing caseID"})
 		return
 	}
-	status := "withdraw"
-	err := services.UpdateCaseStatus(caseID, status)
+	err := services.UpdateCaseToWithdraw(caseID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Update Case Status " + err.Error()})
 		return

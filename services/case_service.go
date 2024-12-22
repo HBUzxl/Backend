@@ -3,6 +3,7 @@ package services
 import (
 	"backend/config"
 	"backend/models"
+	"time"
 )
 
 // GetUnsubmitCases 获取未提交的病例
@@ -52,19 +53,48 @@ func GetCaseByCaseID(caseID string) (*models.Case, error) {
 	return &caseData, nil
 }
 
-// UpdateCaseStatus 更新病例状态
-func UpdateCaseStatus(caseID string, status string) error {
+// UpdateCaseToPendingDiagnosis 将病例状态更新为待诊断
+func UpdateCaseToPendingDiagnosis(caseID string) error {
 	var caseData models.Case
 	err := config.DB.Where("case_id = ?", caseID).First(&caseData).Error
 	if err != nil {
 		return err
 	}
+	caseData.CaseStatus = "pendingdiagnosis"
+	caseData.ConsultationID = "HZ_" + caseID
+	caseData.SubmitAt = time.Now()
+	return config.DB.Save(&caseData).Error
+}
 
-	// 生成会诊编号
-	if status == "unsubmitted" {
-		caseData.ConsultationID = "HZ_" + caseID
+// UpdateCaseToDiagnosed 将病例状态更新为已诊断
+func UpdateCaseToDiagnosed(caseID string) error {
+	var caseData models.Case
+	err := config.DB.Where("case_id = ?", caseID).First(&caseData).Error
+	if err != nil {
+		return err
 	}
+	caseData.CaseStatus = "diagnosed"
+	return config.DB.Save(&caseData).Error
+}
 
-	caseData.CaseStatus = status
+// UpdateCaseToReturned 将病例状态更新为被退回
+func UpdateCaseToReturned(caseID string) error {
+	var caseData models.Case
+	err := config.DB.Where("case_id = ?", caseID).First(&caseData).Error
+	if err != nil {
+		return err
+	}
+	caseData.CaseStatus = "returned"
+	return config.DB.Save(&caseData).Error
+}
+
+// UpdateCaseToWithdraw 将病例状态更新为撤回
+func UpdateCaseToWithdraw(caseID string) error {
+	var caseData models.Case
+	err := config.DB.Where("case_id = ?", caseID).First(&caseData).Error
+	if err != nil {
+		return err
+	}
+	caseData.CaseStatus = "withdraw"
 	return config.DB.Save(&caseData).Error
 }
