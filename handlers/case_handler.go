@@ -110,3 +110,18 @@ func UpdateWithdrawCaseHandler(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Update Case Status Success"})
 }
+
+// IncreasePrintCountHandler 增加打印次数
+func IncreasePrintCountHandler(c *gin.Context) {
+	caseID := c.Param("caseID")
+	if caseID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing caseID"})
+		return
+	}
+	err := services.IncreasePrintCount(caseID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Increase Print Count " + err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Increase Print Count Success"})
+}

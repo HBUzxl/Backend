@@ -98,3 +98,14 @@ func UpdateCaseToWithdraw(caseID string) error {
 	caseData.CaseStatus = "withdraw"
 	return config.DB.Save(&caseData).Error
 }
+
+// IncreasePrintCount 增加打印次数
+func IncreasePrintCount(caseID string) error {
+	var caseData models.Case
+	err := config.DB.Where("case_id = ?", caseID).First(&caseData).Error
+	if err != nil {
+		return err
+	}
+	caseData.PrintCount++
+	return config.DB.Save(&caseData).Error
+}

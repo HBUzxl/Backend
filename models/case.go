@@ -33,6 +33,7 @@ type Case struct {
 	PathologicalDiagnosis string `json:"pathologicalDiagnosis"` //病理诊断
 	Remarks               string `json:"remarks"`               //备注
 
+	//打印
 	PrintCount int `json:"printCount"` //打印次数
 
 	//病例状态
@@ -52,5 +53,10 @@ type Case struct {
 	ConsultationID string `json:"consultationID" gorm:"type:varchar(255)"` //会诊编号
 
 	//时间
-	SubmitAt time.Time `json:"submitAt"` //提交时间
+	SubmitAt   time.Time `json:"submitAt"`   //提交时间
+	DiagnoseAt time.Time `json:"diagnoseAt"` //诊断时间
+
+	//诊断
+	DiagnosisContent string `json:"diagnosisContent"` //诊断内容
+
 }

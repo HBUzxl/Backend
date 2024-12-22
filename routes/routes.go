@@ -39,6 +39,8 @@ func InitRoutes(r *gin.Engine) {
 			caseGroup.POST("/toDiagnosed/:caseID", handlers.UpdateDiagnosedCaseHandler)      // 更新状态：到已诊断
 			caseGroup.POST("/toReturned/:caseID", handlers.UpdateReturnedCaseHandler)        // 更新状态：到已退回
 			caseGroup.POST("/toWithdraw/:caseID", handlers.UpdateWithdrawCaseHandler)        // 更新状态：到已撤回
+
+			caseGroup.POST("/:caseID/print", handlers.IncreasePrintCountHandler) // 增加打印次数
 		}
 
 		// 专家相关路由
