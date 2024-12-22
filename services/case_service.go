@@ -22,6 +22,21 @@ func GetUnsubmitCases() ([]models.Case, error) {
 	return cases, nil
 }
 
+// GetPendingDiagnosisCases 获取待诊断的病例
+func GetPendingDiagnosisCases() ([]models.Case, error) {
+	var cases []models.Case
+	err := config.DB.
+		Preload("Expert").
+		Preload("Slices").
+		Preload("Attachments").
+		Where("case_status = ?", "pendingdiagnosis").
+		Find(&cases).Error
+	if err != nil {
+		return nil, err
+	}
+	return cases, nil
+}
+
 // GetCaseByCaseID 根据病例ID获取病例
 func GetCaseByCaseID(caseID string) (*models.Case, error) {
 	var caseData models.Case
@@ -44,6 +59,12 @@ func UpdateCaseStatus(caseID string, status string) error {
 	if err != nil {
 		return err
 	}
+
+	// 生成会诊编号
+	if status == "unsubmitted" {
+		caseData.ConsultationID = "HZ_" + caseID
+	}
+
 	caseData.CaseStatus = status
 	return config.DB.Save(&caseData).Error
 }

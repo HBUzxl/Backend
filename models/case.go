@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 type Case struct {
 	Id uint `json:"id" gorm:"unique; AUTO_INCREMENT"` // ID
 
@@ -45,4 +47,10 @@ type Case struct {
 
 	//关联附件
 	Attachments []Attachment `json:"attachments" gorm:"foreignKey:CaseID; references:CaseID"` //附件
+
+	//会诊编号
+	ConsultationID string `json:"consultationID" gorm:"type:varchar(255)"` //会诊编号
+
+	//时间
+	SubmitAt time.Time `json:"submitAt"` //提交时间
 }

@@ -21,6 +21,20 @@ func GetUnsubmitCasesHandler(c *gin.Context) {
 	})
 }
 
+// GetPendingDiagnosisCasesHandler 获取待诊断的病例
+func GetPendingDiagnosisCasesHandler(c *gin.Context) {
+	cases, err := services.GetPendingDiagnosisCases()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Get Pending Diagnosis Cases " + err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"cases": cases,
+	})
+}
+
 // GetCaseByCaseIDHandler 根据病例ID获取病例
 func GetCaseByCaseIDHandler(c *gin.Context) {
 	caseID := c.Param("caseID")
