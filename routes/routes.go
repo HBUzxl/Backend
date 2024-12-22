@@ -27,13 +27,14 @@ func InitRoutes(r *gin.Engine) {
 		// 病例相关路由
 		caseGroup := api.Group("/case")
 		{
-			caseGroup.POST("/unsubmitted", handlers.GetUnsubmitCasesHandler) // 获取未提交的病例
-			caseGroup.GET("/:caseID", handlers.GetCaseByCaseIDHandler)       // 根据病例ID获取病例
-
+			caseGroup.POST("/unsubmitted", handlers.GetUnsubmitCasesHandler)              // 获取未提交的病例
 			caseGroup.POST("/pendingdiagnosis", handlers.GetPendingDiagnosisCasesHandler) // 获取待诊断的病例
-			// caseGroup.POST("/diagnosed", handlers.GetDiagnosedCasesHandler)               // 获取已诊断的病例
-			// caseGroup.POST("/returned", handlers.GetReturnedCasesHandler)                 // 获取已退回的病例
-			// caseGroup.POST("/withdraw", handlers.GetWithdrawCasesHandler)                 // 获取已撤回的病例
+			caseGroup.POST("/diagnosed", handlers.GetDiagnosedCasesHandler)               // 获取已诊断的病例
+			caseGroup.POST("/returned", handlers.GetReturnedCasesHandler)                 // 获取已退回的病例
+			caseGroup.POST("/withdraw", handlers.GetWithdrawCasesHandler)                 // 获取已撤回的病例
+
+			caseGroup.GET("/:caseID", handlers.GetCaseByCaseIDHandler) // 根据病例ID获取病例
+			caseGroup.POST("/submit", handlers.SubmitCaseHandler)      // 提交病例
 
 			caseGroup.POST("/toPendingdiagnosis/:caseID", handlers.UpdatePendingCaseHandler) // 更新状态：到待诊断
 			caseGroup.POST("/toDiagnosed/:caseID", handlers.UpdateDiagnosedCaseHandler)      // 更新状态：到已诊断

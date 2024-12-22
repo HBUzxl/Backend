@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"backend/models"
 	"backend/services"
 	"net/http"
 
@@ -27,6 +28,48 @@ func GetPendingDiagnosisCasesHandler(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Get Pending Diagnosis Cases " + err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"cases": cases,
+	})
+}
+
+// GetDiagnosedCasesHandler 获取已诊断的病例
+func GetDiagnosedCasesHandler(c *gin.Context) {
+	cases, err := services.GetDiagnosedCases()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Get Diagnosed Cases " + err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"cases": cases,
+	})
+}
+
+// GetReturnedCasesHandler 获取已退回的病例
+func GetReturnedCasesHandler(c *gin.Context) {
+	cases, err := services.GetReturnedCases()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Get Returned Cases " + err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"cases": cases,
+	})
+}
+
+// GetWithdrawCasesHandler 获取已撤回的病例
+func GetWithdrawCasesHandler(c *gin.Context) {
+	cases, err := services.GetWithdrawCases()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Get Withdraw Cases " + err.Error(),
 		})
 		return
 	}
@@ -124,4 +167,21 @@ func IncreasePrintCountHandler(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Increase Print Count Success"})
+}
+
+// SubmitCaseHandler 提交病例
+func SubmitCaseHandler(c *gin.Context) {
+	caseData := models.Case{}
+	err := c.BindJSON(&caseData)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Bind Case Data Error: " + err.Error()})
+		return
+	}
+	err = services.SubmitCase(&caseData)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Submit Case Error: " + err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Submit Case Success", "case": caseData})
+
 }
