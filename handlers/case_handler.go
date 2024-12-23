@@ -199,3 +199,15 @@ func SubmitCaseHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Submit Case Success", "case": caseData})
 
 }
+
+// ExportExcelHandler 导出病例Excel
+func ExportExcelHandler(c *gin.Context) {
+	excelData, err := services.ExportExcel()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Export Excel Error: " + err.Error()})
+		return
+	}
+	c.Header("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+	c.Header("Content-Disposition", "attachment; filename=统计报表.xlsx")
+	c.Data(http.StatusOK, "application/octet-stream", excelData)
+}

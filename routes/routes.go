@@ -42,6 +42,8 @@ func InitRoutes(r *gin.Engine) {
 
 				caseGroup.GET("/all", handlers.GetAllCasesHandler) // 获取所有病例
 
+				caseGroup.GET("/excel", handlers.ExportExcelHandler) // 导出Excel
+
 				caseGroup.GET("/:caseID", handlers.GetCaseByCaseIDHandler) // 根据病例ID获取病例
 				caseGroup.POST("/submit", handlers.SubmitCaseHandler)      // 提交病例
 
@@ -51,6 +53,7 @@ func InitRoutes(r *gin.Engine) {
 				caseGroup.POST("/toWithdraw/:caseID", handlers.UpdateWithdrawCaseHandler)        // 更新状态：到已撤回
 
 				caseGroup.POST("/:caseID/print", handlers.IncreasePrintCountHandler) // 增加打印次数
+
 			}
 
 			// 专家相关路由
