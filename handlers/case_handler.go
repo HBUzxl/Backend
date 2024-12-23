@@ -78,6 +78,20 @@ func GetWithdrawCasesHandler(c *gin.Context) {
 	})
 }
 
+// GetAllCasesHandler 获取所有病例
+func GetAllCasesHandler(c *gin.Context) {
+	cases, err := services.GetAllCases()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Get All Cases " + err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"cases": cases,
+	})
+}
+
 // GetCaseByCaseIDHandler 根据病例ID获取病例
 func GetCaseByCaseIDHandler(c *gin.Context) {
 	caseID := c.Param("caseID")

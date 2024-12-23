@@ -85,6 +85,20 @@ func GetWithdrawCases() ([]models.Case, error) {
 	return cases, nil
 }
 
+// GetAllCases 获取所有病例
+func GetAllCases() ([]models.Case, error) {
+	var cases []models.Case
+	err := config.DB.
+		Preload("Expert").
+		Preload("Slices").
+		Preload("Attachments").
+		Find(&cases).Error
+	if err != nil {
+		return nil, err
+	}
+	return cases, nil
+}
+
 // GetCaseByCaseID 根据病例ID获取病例
 func GetCaseByCaseID(caseID string) (*models.Case, error) {
 	var caseData models.Case
@@ -157,6 +171,7 @@ func IncreasePrintCount(caseID string) error {
 	return config.DB.Save(&caseData).Error
 }
 
+// SubmitCase 提交病例
 func SubmitCase(caseData *models.Case) error {
 	// 开启事务
 	tx := config.DB.Begin()

@@ -40,6 +40,8 @@ func InitRoutes(r *gin.Engine) {
 				caseGroup.POST("/returned", handlers.GetReturnedCasesHandler)                 // 获取已退回的病例
 				caseGroup.POST("/withdraw", handlers.GetWithdrawCasesHandler)                 // 获取已撤回的病例
 
+				caseGroup.GET("/all", handlers.GetAllCasesHandler) // 获取所有病例
+
 				caseGroup.GET("/:caseID", handlers.GetCaseByCaseIDHandler) // 根据病例ID获取病例
 				caseGroup.POST("/submit", handlers.SubmitCaseHandler)      // 提交病例
 
