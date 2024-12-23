@@ -272,7 +272,7 @@ func ExportExcel() ([]byte, error) {
 		"pendingdiagnosis": "待诊断",
 		"diagnosed":        "已诊断",
 		"returned":         "被退回",
-		"withdrawn":        "撤回",
+		"withdraw":         "撤回",
 	}
 
 	for i, c := range cases {

@@ -1,143 +1,136 @@
+# 在线会诊系统后端
 
+## 项目简介
+在线会诊系统后端服务，基于Go语言和Gin框架开发，提供病例管理、用户认证、专家诊断等功能的API服务。
+
+## 技术栈
+- Go 1.20+
+- Gin Web Framework
+- GORM
+- MySQL
+- JWT Authentication
+- Excelize (Excel导出)
 
 ## 目录结构
 ```
 backend/
 ├── main.go          // 程序入口文件
 ├── config/
-│   └── config.go    // 配置文件
-├── handlers/        
-│   ├── admin.go     // 管理员处理
-│   ├── expert.go    // 专家处理
-│   ├── allocator.go // 分配员处理
-│   └── auth.go      // 登录认证处理
+│   └── config.go    // 数据库配置和其他全局配置
+├── handlers/        // HTTP请求处理器
+│   ├── auth_handler.go    // 认证相关处理
+│   ├── case_handler.go    // 病例相关处理
+│   └── user_handler.go    // 用户相关处理
 ├── middleware/
-│   └── auth.go      // 认证中间件
-├── models/
-│   ├── case.go      // 病例模型
-│   ├── user.go      // 用户模型
-│   └── ...
+│   └── jwt.go            // JWT认证中间件
+├── models/              // 数据模型
+│   ├── case.go          // 病例模型
+│   ├── user.go          // 用户模型
+│   └── slice.go         // 切片模型
 ├── routes/
-│   └── routes.go    // 路由文件
-├── services/
-│   ├── admin.go     // 管理员服务
-│   ├── expert.go    // 专家服务
-│   ├── allocator.go // 分配员服务
-│   └── auth.go      // 登录认证服务
-└── README.md        // 项目说明
+│   └── routes.go        // 路由配置
+├── services/           // 业务逻辑层
+│   ├── auth_service.go  // 认证服务
+│   ├── case_service.go  // 病例服务
+│   └── user_service.go  // 用户服务
+└── README.md
 ```
 
-## API结构
+## API接口
 
-1. 认证相关 API (/api/v1/auth)
+### 认证相关 (/api/auth)
 ```
-POST /api/v1/auth/login          - 用户登录
-POST /api/v1/auth/logout         - 用户登出
-GET  /api/v1/auth/profile        - 获取当前用户信息
-POST  /api/v1/auth/password       - 修改密码
-```
-
-2. 用户管理相关 API (/api/v1/users) (管理员权限)
-```
-GET    /api/v1/users             - 获取用户列表
-POST   /api/v1/users             - 创建新用户
-GET    /api/v1/users/:id         - 获取特定用户信息
-POST    /api/v1/users/:id         - 更新用户信息
-POST /api/v1/users/:id         - 删除用户
-GET    /api/v1/users/experts     - 获取专家列表
+POST /api/auth/login              - 用户登录
+GET  /api/auth/current-user       - 获取当前用户信息
+POST /api/auth/change-password    - 修改密码
 ```
 
-3. 诊断管理相关 API (/api/v1/cases) (专家权限)
+### 病例管理 (/api/case)
 ```
-GET    /api/v1/diagnoses              - 获取诊断列表
-GET    /api/v1/diagnoses/assigned     - 获取分配给我的诊断
-POST   /api/v1/diagnoses/:caseId      - 提交诊断结果
-POST    /api/v1/diagnoses/:id          - 更新诊断结果
-GET    /api/v1/diagnoses/:id/history  - 获取诊断历史记录
+POST /api/case/unsubmitted        - 获取未提交的病例
+POST /api/case/pendingdiagnosis   - 获取待诊断的病例
+POST /api/case/diagnosed          - 获取已诊断的病例
+POST /api/case/returned           - 获取已退回的病例
+POST /api/case/withdraw           - 获取已撤回的病例
+GET  /api/case/all               - 获取所有病例
+GET  /api/case/:caseID          - 根据病例ID获取病例
+POST /api/case/submit           - 提交病例
+GET  /api/case/excel            - 导出Excel报表
+
+// 状态更新接口
+POST /api/case/toPendingdiagnosis/:caseID  - 更新状态：到待诊断
+POST /api/case/toDiagnosed/:caseID         - 更新状态：到已诊断
+POST /api/case/toReturned/:caseID          - 更新状态：到已退回
+POST /api/case/toWithdraw/:caseID          - 更新状态：到已撤回
+POST /api/case/:caseID/print               - 增加打印次数
 ```
 
-4. 病例管理相关 API (/api/v1/applications) (分配员权限)
+### 专家管理 (/api/expert)
 ```
-GET    /api/v1/cases             - 获取病例列表
-POST   /api/v1/cases             - 创建新病例
-GET    /api/v1/cases/:id         - 获取特定病例详情
-PUT    /api/v1/cases/:id         - 更新病例信息
-DELETE /api/v1/cases/:id         - 删除病例
-POST   /api/v1/cases/:id/assign  - 分配病例给专家
+GET  /api/expert/                 - 获取专家列表
 ```
 
-5. 统计报告相关 API (/api/v1/reports) (管理员权限)
+### 文件上传 (/api/slice & /api/attachment)
 ```
-GET /api/v1/reports/diagnosis   - 获取诊断统计报告
-GET /api/v1/reports/assignment  - 获取分配统计报告
-```
-
-6. 文件上传相关 API (/api/v1/files) (管理员权限)
-```
-POST   /api/v1/files/upload      - 上传文件（病例图片等）
-DELETE /api/v1/files/:id         - 删除文件
-GET    /api/v1/files/:id         - 获取文件
+POST /api/slice/upload           - 上传切片
+POST /api/attachment/upload      - 上传附件
 ```
 
-## 数据库表结构
+## 数据模型
 
-1. User表
-
-```
-CREATE TABLE users (
-    id          SERIAL PRIMARY KEY,
-    username    VARCHAR(50) UNIQUE NOT NULL,
-    password    VARCHAR(255) NOT NULL,
-    role        VARCHAR(20) NOT NULL,  -- admin/expert/allocator
-    name        VARCHAR(100),
-    department  VARCHAR(100),
-    title       VARCHAR(50),
-    created_at  TIMESTAMP,
-    updated_at  TIMESTAMP
-);
-```
-
-2. Case表
-
-```
-CREATE TABLE cases (
-    id          SERIAL PRIMARY KEY,
-    patient_name VARCHAR(100) NOT NULL,
-    age         INT,
-    gender      VARCHAR(10),
-    symptoms    TEXT,
-    description TEXT,
-    status      VARCHAR(20),  -- pending/assigned/diagnosed
-    created_by  INT REFERENCES users(id),
-    created_at  TIMESTAMP,
-    updated_at  TIMESTAMP
-);
+### Case 模型
+```go
+type Case struct {
+    ID              uint      `gorm:"primarykey"`
+    CaseID          string    // 病理号
+    ConsultationID  string    // 会诊编号
+    PathologyType   string    // 病例类型
+    PatientName     string    // 患者姓名
+    PatientGender   string    // 患者性别
+    PatientAge      int       // 患者年龄
+    Hospital        string    // 医院
+    Department      string    // 科室
+    CaseStatus      string    // 状态(unsubmitted/pendingdiagnosis/diagnosed/returned/withdraw)
+    DiagnosisContent string   // 诊断内容
+    ExpertID        uint      // 专家ID
+    Expert          User      // 专家信息
+    PrintCount      int       // 打印次数
+    SubmitAt        time.Time // 提交时间
+    CreatedAt       time.Time
+    UpdatedAt       time.Time
+}
 ```
 
-3. Diagnosis表
-
-```
-CREATE TABLE diagnoses (
-    id          SERIAL PRIMARY KEY,
-    case_id     INT REFERENCES cases(id),
-    expert_id   INT REFERENCES users(id),
-    diagnosis   TEXT,
-    comments    TEXT,
-    status      VARCHAR(20),  -- pending/completed
-    created_at  TIMESTAMP,
-    updated_at  TIMESTAMP
-);
+### User 模型
+```go
+type User struct {
+    ID        uint      `gorm:"primarykey"`
+    Username  string    `gorm:"unique"`
+    Password  string
+    Role      string    // 角色
+    NickName  string    // 昵称
+    CreatedAt time.Time
+    UpdatedAt time.Time
+}
 ```
 
-4. File表
+## 运行项目
 
+1. 安装依赖
+```bash
+go mod download
 ```
-CREATE TABLE files (
-    id          SERIAL PRIMARY KEY,
-    case_id     INT REFERENCES cases(id),
-    file_type   VARCHAR(50),
-    file_path   VARCHAR(255),
-    created_at  TIMESTAMP
-);
+
+2. 配置数据库
+编辑 `config/config.go` 文件，设置数据库连接信息
+
+3. 运行项目
+```bash
+go run main.go
 ```
-5
+
+## 注意事项
+- 所有API请求需要在Header中携带JWT Token（除了登录接口）
+- Token格式：`Authorization: Bearer <token>`
+- 文件上传大小限制：50MB
+- Excel导出功能会自动格式化日期和状态信息
