@@ -56,6 +56,12 @@ func InitRoutes(r *gin.Engine) {
 
 			}
 
+			// 预约相关路由
+			appointmentGroup := authenticated.Group("/appointment")
+			{
+				appointmentGroup.GET("/all", handlers.GetAppointmentsHandler) // 获取预约列表
+			}
+
 			// 专家相关路由
 			expertGroup := authenticated.Group("/expert")
 			{

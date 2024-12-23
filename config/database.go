@@ -30,6 +30,7 @@ func InitDB() {
 	DB.AutoMigrate(&models.Case{})
 	DB.AutoMigrate(&models.Slice{})
 	DB.AutoMigrate(&models.Attachment{})
+	DB.AutoMigrate(&models.Appointment{})
 	DB.AutoMigrate(&models.Case{}, &models.Expert{})
 	fmt.Println("数据库连接成功")
 }
