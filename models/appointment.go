@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 type Appointment struct {
 	Id            uint   `json:"id" gorm:"AUTO_INCREMENT"`               // ID
 	AppointmentID string `json:"appointmentID" gorm:"type:varchar(255)"` // 预约编号
@@ -21,6 +23,7 @@ type Appointment struct {
 	Hospital string `json:"hospital"` // 送检医院
 	Remarks  string `json:"remarks"`  // 备注
 
-	SubmitAt          string `json:"submitAt"`          // 提交时间
+	SubmitAt time.Time `json:"submitAt" gorm:"type:datetime;null"` //提交时间
+
 	AppointmentStatus string `json:"appointmentStatus"` // 预约状态
 }
