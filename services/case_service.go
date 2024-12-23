@@ -262,10 +262,8 @@ func SubmitCase(caseData *models.Case) error {
 			"print_count":            caseData.PrintCount,
 			"case_status":            caseData.CaseStatus,
 			"expert_id":              caseData.ExpertID,
-			"consultation_id":        caseData.ConsultationID,
 			"submit_at":              caseData.SubmitAt,
 			"diagnose_at":            caseData.DiagnoseAt,
-			"diagnosis_content":      caseData.DiagnosisContent,
 		}).Error; err != nil {
 			tx.Rollback()
 			return err
