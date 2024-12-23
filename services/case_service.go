@@ -183,12 +183,20 @@ func SubmitCase(caseData *models.Case) error {
 		}
 	}()
 
+	// 检查病例是否已存在
 	var existingCase models.Case
 	err := tx.Where("case_id = ?", caseData.CaseID).First(&existingCase).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			// 不存在，则新建
 			caseData.CaseStatus = "unsubmitted"
+			// 设置提交时间为当前时间
+			currentTime := time.Now()
+			caseData.SubmitAt = currentTime
+			// 初始化诊断时间为空值
+			var zeroTime time.Time
+			caseData.DiagnoseAt = zeroTime
+
 			if err := tx.Create(caseData).Error; err != nil {
 				tx.Rollback()
 				return err
@@ -200,8 +208,65 @@ func SubmitCase(caseData *models.Case) error {
 		}
 	} else {
 		// 已存在，则更新全部字段
-		existingCase = *caseData
-		if err := tx.Save(&existingCase).Error; err != nil {
+		fmt.Println("病例已存在")
+		currentTime := time.Now()
+
+		// 如果状态发生变化，更新相应的时间
+		if existingCase.CaseStatus != caseData.CaseStatus {
+			if caseData.CaseStatus == "unsubmitted" {
+				caseData.SubmitAt = currentTime
+				var zeroTime time.Time
+				caseData.DiagnoseAt = zeroTime
+			} else if caseData.CaseStatus == "diagnosed" {
+				caseData.DiagnoseAt = currentTime
+			}
+		}
+
+		// 保持原有的时间戳
+		if caseData.SubmitAt.IsZero() {
+			caseData.SubmitAt = existingCase.SubmitAt
+		}
+		if caseData.DiagnoseAt.IsZero() {
+			caseData.DiagnoseAt = existingCase.DiagnoseAt
+		}
+
+		// 保持原有的ID和关联关系
+		caseData.Id = existingCase.Id
+
+		// 使用Updates更新非零值字段
+		if err := tx.Model(&existingCase).Updates(map[string]interface{}{
+			"patient_name":           caseData.PatientName,
+			"patient_gender":         caseData.PatientGender,
+			"patient_age":            caseData.PatientAge,
+			"patient_phone":          caseData.PatientPhone,
+			"patient_type":           caseData.PatientType,
+			"biopsy_site":            caseData.BiopsySite,
+			"tissue_count":           caseData.TissueCount,
+			"bar_code":               caseData.BarCode,
+			"checkup_no":             caseData.CheckupNo,
+			"clinical_phone":         caseData.ClinicalPhone,
+			"hospital":               caseData.Hospital,
+			"sample_date":            caseData.SampleDate,
+			"receive_date":           caseData.ReceiveDate,
+			"pathology_type":         caseData.PathologyType,
+			"inpatient_no":           caseData.InpatientNo,
+			"bed_no":                 caseData.BedNo,
+			"marital_status":         caseData.MaritalStatus,
+			"patient_address":        caseData.PatientAddress,
+			"clinical_diagnosis":     caseData.ClinicalDiagnosis,
+			"clinical_data":          caseData.ClinicalData,
+			"gross_finding":          caseData.GrossFinding,
+			"immunohistochemistry":   caseData.Immunohistochemistry,
+			"pathological_diagnosis": caseData.PathologicalDiagnosis,
+			"remarks":                caseData.Remarks,
+			"print_count":            caseData.PrintCount,
+			"case_status":            caseData.CaseStatus,
+			"expert_id":              caseData.ExpertID,
+			"consultation_id":        caseData.ConsultationID,
+			"submit_at":              caseData.SubmitAt,
+			"diagnose_at":            caseData.DiagnoseAt,
+			"diagnosis_content":      caseData.DiagnosisContent,
+		}).Error; err != nil {
 			tx.Rollback()
 			return err
 		}

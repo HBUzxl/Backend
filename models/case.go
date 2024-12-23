@@ -49,14 +49,12 @@ type Case struct {
 	//关联附件
 	Attachments []Attachment `json:"attachments" gorm:"foreignKey:CaseID; references:CaseID"` //附件
 
-	//会诊编号
 	ConsultationID string `json:"consultationID" gorm:"type:varchar(255)"` //会诊编号
 
 	//时间
-	SubmitAt   time.Time `json:"submitAt"`   //提交时间
-	DiagnoseAt time.Time `json:"diagnoseAt"` //诊断时间
+	SubmitAt   time.Time `json:"submitAt" gorm:"type:datetime;null"`   //提交时间
+	DiagnoseAt time.Time `json:"diagnoseAt" gorm:"type:datetime;null"` //诊断时间
 
-	//诊断
 	DiagnosisContent string `json:"diagnosisContent"` //诊断内容
 
 }
