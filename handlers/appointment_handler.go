@@ -55,3 +55,18 @@ func GetAppointmentHandler(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"appointment": appointment})
 }
+
+// DeleteAppointmentHandler 删除预约
+func DeleteAppointmentHandler(c *gin.Context) {
+	appointmentID := c.Param("appointmentID")
+	if appointmentID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing appointmentID"})
+		return
+	}
+	err := services.DeleteAppointment(appointmentID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Delete Appointment Error: " + err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Delete Appointment Success"})
+}

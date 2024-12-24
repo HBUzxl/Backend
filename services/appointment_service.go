@@ -81,3 +81,8 @@ func GetAppointmentByID(appointmentID string) (*models.Appointment, error) {
 	}
 	return &appointment, nil
 }
+
+// DeleteAppointmentHandler 根据预约ID删除预约
+func DeleteAppointment(appointmentID string) error {
+	return config.DB.Where("appointment_id = ?", appointmentID).Delete(&models.Appointment{}).Error
+}

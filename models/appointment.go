@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Appointment struct {
 	Id            uint   `json:"id" gorm:"AUTO_INCREMENT"`               // ID
@@ -26,4 +30,6 @@ type Appointment struct {
 	SubmitAt time.Time `json:"submitAt" gorm:"type:datetime;not null;default:CURRENT_TIMESTAMP"` //提交时间
 
 	AppointmentStatus string `json:"appointmentStatus"` // 预约状态
+
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
