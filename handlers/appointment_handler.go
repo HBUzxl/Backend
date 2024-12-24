@@ -3,6 +3,7 @@ package handlers
 import (
 	"backend/models"
 	"backend/services"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -30,6 +31,8 @@ func SubmitAppointmentHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Bind Appointment Data Error: " + err.Error()})
 		return
 	}
+	fmt.Println("appointmentData.AppointmentID", appointmentData.AppointmentID)
+	fmt.Println("appointmentData", appointmentData)
 	err = services.SubmitAppointment(&appointmentData)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Submit Appointment Error: " + err.Error()})

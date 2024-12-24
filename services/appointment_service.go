@@ -30,6 +30,8 @@ func SubmitAppointment(appointmentData *models.Appointment) error {
 		}
 	}()
 
+	fmt.Println("appointmentData.AppointmentID", appointmentData.AppointmentID)
+
 	// 检查预约是否已存在
 	var existingAppointment models.Appointment
 	err := tx.Where("appointment_id = ?", appointmentData.AppointmentID).First(&existingAppointment).Error
