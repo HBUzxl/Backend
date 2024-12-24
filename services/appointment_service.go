@@ -37,13 +37,13 @@ func SubmitAppointment(appointmentData *models.Appointment) error {
 		if err == gorm.ErrRecordNotFound {
 			// 不存在，则新建
 			appointmentData.AppointmentStatus = "申请中"
+			appointmentData.AppointmentID = "AP_" + time.Now().Format("20060102150405")
 			// 设置提交时间为当前时间
-			currentTime := time.Now()
-			appointmentData.SubmitAt = currentTime
+			appointmentData.SubmitAt = time.Now()
 
 			if err := tx.Create(appointmentData).Error; err != nil {
 				tx.Rollback()
-				return err
+				return fmt.Errorf("创建预约失败: %v", err)
 			}
 		} else {
 			// 其他数据库错误
@@ -56,23 +56,11 @@ func SubmitAppointment(appointmentData *models.Appointment) error {
 		appointmentData.AppointmentStatus = "申请中"
 
 		appointmentData.AppointmentID = existingAppointment.AppointmentID
+		appointmentData.SubmitAt = time.Now()
 
-		if err := tx.Model(&existingAppointment).Updates(map[string]interface{}{
-			"patient_name":       appointmentData.PatientName,
-			"patient_gender":     appointmentData.PatientGender,
-			"patient_age":        appointmentData.PatientAge,
-			"patient_phone":      appointmentData.PatientPhone,
-			"appointment_at":     appointmentData.AppointmentAt,
-			"surgery_location":   appointmentData.SurgeryLocation,
-			"clinical_doctor":    appointmentData.ClinicalDoctor,
-			"expert_id":          appointmentData.ExpertID,
-			"hospital":           appointmentData.Hospital,
-			"remarks":            appointmentData.Remarks,
-			"submit_at":          appointmentData.SubmitAt,
-			"appointment_status": appointmentData.AppointmentStatus,
-		}).Error; err != nil {
+		if err := tx.Model(&existingAppointment).Updates(appointmentData).Error; err != nil {
 			tx.Rollback()
-			return err
+			return fmt.Errorf("更新预约失败: %v", err)
 		}
 	}
 

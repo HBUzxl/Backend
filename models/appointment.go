@@ -23,7 +23,7 @@ type Appointment struct {
 	Hospital string `json:"hospital"` // 送检医院
 	Remarks  string `json:"remarks"`  // 备注
 
-	SubmitAt time.Time `json:"submitAt" gorm:"type:datetime;null"` //提交时间
+	SubmitAt time.Time `json:"submitAt" gorm:"type:datetime;not null;default:CURRENT_TIMESTAMP"` //提交时间
 
 	AppointmentStatus string `json:"appointmentStatus"` // 预约状态
 }
