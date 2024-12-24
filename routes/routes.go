@@ -46,6 +46,7 @@ func InitRoutes(r *gin.Engine) {
 
 				caseGroup.GET("/:caseID", handlers.GetCaseByCaseIDHandler) // 根据病例ID获取病例
 				caseGroup.POST("/submit", handlers.SubmitCaseHandler)      // 提交病例
+				caseGroup.DELETE("/:caseID", handlers.DeleteCaseHandler)   // 删除病例
 
 				caseGroup.POST("/toPendingdiagnosis/:caseID", handlers.UpdatePendingCaseHandler) // 更新状态：到待诊断
 				caseGroup.POST("/toDiagnosed/:caseID", handlers.UpdateDiagnosedCaseHandler)      // 更新状态：到已诊断

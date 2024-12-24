@@ -382,3 +382,7 @@ func ExportExcel() ([]byte, error) {
 	}
 	return buf.Bytes(), nil
 }
+
+func DeleteCase(caseID string) error {
+	return config.DB.Where("case_id = ?", caseID).Delete(&models.Case{}).Error
+}

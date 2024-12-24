@@ -211,3 +211,18 @@ func ExportExcelHandler(c *gin.Context) {
 	c.Header("Content-Disposition", "attachment; filename=统计报表.xlsx")
 	c.Data(http.StatusOK, "application/octet-stream", excelData)
 }
+
+// DeleteCaseHandler 删除病例
+func DeleteCaseHandler(c *gin.Context) {
+	caseID := c.Param("caseID")
+	if caseID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing caseID"})
+		return
+	}
+	err := services.DeleteCase(caseID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Delete Case Error: " + err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Delete Case Success"})
+}

@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Case struct {
 	Id uint `json:"id" gorm:"unique; AUTO_INCREMENT"` // ID
@@ -57,4 +61,6 @@ type Case struct {
 
 	DiagnosisContent string `json:"diagnosisContent"` //诊断内容
 
+	//删除时间
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
