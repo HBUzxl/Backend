@@ -66,3 +66,16 @@ func SubmitAppointment(appointmentData *models.Appointment) error {
 
 	return tx.Commit().Error
 }
+
+// GetAppointmentByID 根据预约ID获取预约
+func GetAppointmentByID(appointmentID string) (*models.Appointment, error) {
+	var appointment models.Appointment
+	err := config.DB.
+		Preload("Expert").
+		Where("appointment_id = ?", appointmentID).
+		First(&appointment).Error
+	if err != nil {
+		return nil, err
+	}
+	return &appointment, nil
+}

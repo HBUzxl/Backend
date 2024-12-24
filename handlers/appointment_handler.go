@@ -36,5 +36,19 @@ func SubmitAppointmentHandler(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Submit Appointment Success", "appointment": appointmentData})
+}
 
+// GetAppointmentHandler 根据预约ID获取预约
+func GetAppointmentHandler(c *gin.Context) {
+	appointmentID := c.Param("appointmentID")
+	if appointmentID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing appointmentID"})
+		return
+	}
+	appointment, err := services.GetAppointmentByID(appointmentID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Get Appointment Error: " + err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"appointment": appointment})
 }
