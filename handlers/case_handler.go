@@ -3,6 +3,7 @@ package handlers
 import (
 	"backend/models"
 	"backend/services"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -225,4 +226,20 @@ func DeleteCaseHandler(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Delete Case Success"})
+}
+
+// GetPendingCasesByExpertUsernameHandler 获取专家待处理的病例
+func GetPendingCasesByExpertUsernameHandler(c *gin.Context) {
+	username := c.Param("username")
+	fmt.Println(username)
+	if username == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing expertID"})
+		return
+	}
+	cases, err := services.GetPendingCasesByExpertUsername(username)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Get Pending Cases By ExpertID " + err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"cases": cases})
 }

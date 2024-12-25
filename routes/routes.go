@@ -55,6 +55,8 @@ func InitRoutes(r *gin.Engine) {
 
 				caseGroup.POST("/:caseID/print", handlers.IncreasePrintCountHandler) // 增加打印次数
 
+				caseGroup.GET("/pending/:username", handlers.GetPendingCasesByExpertUsernameHandler) // 根据专家用户名获取待诊断的病例
+
 			}
 
 			// 预约相关路由
