@@ -61,8 +61,7 @@ func InitRoutes(r *gin.Engine) {
 
 				caseGroup.POST("/:caseID/print", handlers.IncreasePrintCountHandler) // 增加打印次数
 
-				caseGroup.GET("/pending/:username", handlers.GetPendingCasesByExpertUsernameHandler) // 根据专家用户名获取待诊断的病例
-
+				caseGroup.GET("/pending/:username", handlers.GetPendingCasesByExpertUsernameHandler)     // 根据专家用户名获取待诊断的病例
 				caseGroup.GET("/diagnosed/:username", handlers.GetDiagnosedCasesByExpertUsernameHandler) // 根据专家用户名获取已诊断的病例
 
 			}
@@ -80,6 +79,8 @@ func InitRoutes(r *gin.Engine) {
 			expertGroup := authenticated.Group("/expert")
 			{
 				expertGroup.GET("/", handlers.GetExpertsHandler) // 获取专家列表
+
+				expertGroup.GET("/all/:username", handlers.GetAllCasesByExpertUsernameHandler) // 根据专家用户名获取待诊断的病例
 			}
 
 			// 切片相关路由

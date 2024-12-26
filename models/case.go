@@ -60,7 +60,8 @@ type Case struct {
 	SubmitAt   time.Time `json:"submitAt" gorm:"type:datetime;null"`   //提交时间
 	DiagnoseAt time.Time `json:"diagnoseAt" gorm:"type:datetime;null"` //诊断时间
 
-	DiagnosisContent string `json:"diagnosisContent"` //诊断内容
+	DiagnosisContent       string `json:"diagnosisContent"`       //诊断内容
+	ExpertDiagnosisOpinion string `json:"expertDiagnosisOpinion"` //专家诊断意见
 
 	DeletedAt gorm.DeletedAt `json:"-" swaggerignore:"true"` // 软删除时间
 }

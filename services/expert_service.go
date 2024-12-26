@@ -63,3 +63,21 @@ func GetDiagnosedCasesByExpertUsername(username string) ([]models.Case, error) {
 	}
 	return cases, nil
 }
+
+// GetAllCasesByExpertUsername 根据专家用户名获取所有病例
+func GetAllCasesByExpertUsername(username string) ([]models.Case, error) {
+	var cases []models.Case
+	expert, err := GetExpertID(username)
+	if err != nil {
+		return nil, err
+	}
+	tx := config.DB.Debug().
+		Preload("Expert").
+		Preload("Slices").
+		Where("expert_id = ?", expert.Id).
+		Find(&cases)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	return cases, nil
+}
