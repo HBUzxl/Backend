@@ -109,3 +109,30 @@ func GetAllCasesByExpertUsernameHandler(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"cases": cases})
 }
+
+// ExportExcelCasesByUsernameHandler godoc
+// @Summary      导出专家所有病例
+// @Description  根据专家用户名导出所有病例
+// @Tags         cases
+// @Accept       json
+// @Produce      json
+// @Param        username  path      string  true  "专家用户名"
+// @Success      200      {object}  map[string]string
+// @Failure      500      {object}  map[string]string
+// @Router       /api/case/export/{username} [get]
+// @Security     Bearer
+func ExportExcelCasesByUsernameHandler(c *gin.Context) {
+	username := c.Param("username")
+	if username == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing expertID"})
+		return
+	}
+	excelData, err := services.ExportExcelCasesByUsername(username)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Export Excel Cases By ExpertID " + err.Error()})
+		return
+	}
+	c.Header("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+	c.Header("Content-Disposition", "attachment; filename=统计报表.xlsx")
+	c.Data(http.StatusOK, "application/octet-stream", excelData)
+}

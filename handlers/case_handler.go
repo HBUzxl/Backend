@@ -344,7 +344,6 @@ func SubmitCaseHandler(c *gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Success      200      {object}  map[string]string
-// @Failure      400      {object}  middleware.ErrorResponse "错误响应"
 // @Failure      500      {object}  middleware.ErrorResponse "错误响应"
 // @Router       /api/case/excel [get]
 // @Security     Bearer
