@@ -6,6 +6,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func InitRoutes(r *gin.Engine) {
@@ -15,6 +17,10 @@ func InitRoutes(r *gin.Engine) {
 			"message": "pong",
 		})
 	})
+
+	// swagger 路由
+	url := ginSwagger.URL("/swagger/doc.json") // The url pointing to API definition
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 
 	// API 路由组
 	api := r.Group("/api")
@@ -56,6 +62,8 @@ func InitRoutes(r *gin.Engine) {
 				caseGroup.POST("/:caseID/print", handlers.IncreasePrintCountHandler) // 增加打印次数
 
 				caseGroup.GET("/pending/:username", handlers.GetPendingCasesByExpertUsernameHandler) // 根据专家用户名获取待诊断的病例
+
+				caseGroup.GET("/diagnosed/:username", handlers.GetDiagnosedCasesByExpertUsernameHandler) // 根据专家用户名获取已诊断的病例
 
 			}
 

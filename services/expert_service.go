@@ -32,14 +32,34 @@ func GetPendingCasesByExpertUsername(username string) ([]models.Case, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = config.DB.
+
+	// 启用SQL语句打印
+	tx := config.DB.Debug().
 		Preload("Expert").
 		Preload("Slices").
 		Where("expert_id = ? AND case_status = ?", expert.Id, "pendingdiagnosis").
-		Find(&cases).Error
+		Find(&cases)
 
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	return cases, nil
+}
+
+// GetDiagnosedCasesByExpertUsername 获取专家已诊断的病例
+func GetDiagnosedCasesByExpertUsername(username string) ([]models.Case, error) {
+	var cases []models.Case
+	expert, err := GetExpertID(username)
 	if err != nil {
 		return nil, err
+	}
+	tx := config.DB.Debug().
+		Preload("Expert").
+		Preload("Slices").
+		Where("expert_id = ? AND case_status = ?", expert.Id, "diagnosed").
+		Find(&cases)
+	if tx.Error != nil {
+		return nil, tx.Error
 	}
 	return cases, nil
 }

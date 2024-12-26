@@ -31,5 +31,5 @@ type Appointment struct {
 
 	AppointmentStatus string `json:"appointmentStatus"` // 预约状态
 
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	DeletedAt gorm.DeletedAt `json:"-" swaggerignore:"true"` // 软删除时间
 }

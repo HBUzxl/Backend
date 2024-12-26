@@ -14,5 +14,5 @@ type Allocator struct {
 	NickName  string         `json:"nickName"`
 	CreatedAt time.Time      `gorm:"autoCreateTime"`
 	UpdatedAt time.Time      `gorm:"autoUpdateTime"`
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	DeletedAt gorm.DeletedAt `json:"-" swaggerignore:"true"` // 软删除时间
 }

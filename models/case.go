@@ -6,6 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// Case 病例模型
 type Case struct {
 	Id uint `json:"id" gorm:"unique; AUTO_INCREMENT"` // ID
 
@@ -61,6 +62,5 @@ type Case struct {
 
 	DiagnosisContent string `json:"diagnosisContent"` //诊断内容
 
-	//删除时间
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	DeletedAt gorm.DeletedAt `json:"-" swaggerignore:"true"` // 软删除时间
 }

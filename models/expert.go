@@ -6,6 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// Expert 专家模型
 type Expert struct {
 	Id        uint           `json:"id" gorm:"unique; AUTO_INCREMENT"`          // 专家ID
 	Username  string         `json:"username" gorm:"unique; type:varchar(255)"` // 专家用户名
@@ -16,7 +17,7 @@ type Expert struct {
 	Phone     string         `json:"phone"`                                     // 电话
 	CreatedAt time.Time      `gorm:"autoCreateTime"`                            // 创建时间
 	UpdatedAt time.Time      `gorm:"autoUpdateTime"`                            // 更新时间
-	DeletedAt gorm.DeletedAt `gorm:"index"`                                     // 删除时间
+	DeletedAt gorm.DeletedAt `json:"-" swaggerignore:"true"`                    // 删除时间
 
 	// 关联字段
 	Cases []Case `gorm:"foreignKey:ExpertID; references:Id;"`

@@ -8,13 +8,50 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// LoginRequest 登录请求结构体
+// swagger:model
 type LoginRequest struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
-	Role     string `json:"role" binding:"required"`
+	// 用户名
+	// Required: true
+	// Example: admin
+	Username string `json:"username" binding:"required" example:"admin"`
+
+	// 密码
+	// Required: true
+	// Example: 123456
+	Password string `json:"password" binding:"required" example:"123456"`
+
+	// 角色
+	// Required: true
+	// Example: admin
+	Role string `json:"role" binding:"required" example:"admin"`
+}
+
+// ChangePasswordRequest 修改密码请求结构体
+// swagger:model
+type ChangePasswordRequest struct {
+	// 旧密码
+	// Required: true
+	// Example: 123456
+	OldPassword string `json:"oldPassword" binding:"required" example:"123456"`
+
+	// 新密码
+	// Required: true
+	// Example: 654321
+	NewPassword string `json:"newPassword" binding:"required" example:"654321"`
 }
 
 // Login 处理登录请求
+// @Summary      登录
+// @Description  登录
+// @Tags         auth
+// @Accept       json
+// @Produce      json
+// @Param        login  body      LoginRequest  true  "登录请求"
+// @Success      200      {object}  map[string]interface{}
+// @Failure      400      {object}  middleware.ErrorResponse "错误响应"
+// @Failure      500      {object}  middleware.ErrorResponse "错误响应"
+// @Router       /api/auth/login [post]
 func Login(c *gin.Context) {
 	log.Println("收到登录请求")
 
@@ -51,6 +88,16 @@ func Login(c *gin.Context) {
 }
 
 // GetCurrentUser 获取当前登录用户信息
+// @Summary      获取当前登录用户信息
+// @Description  获取当前登录用户信息
+// @Tags         auth
+// @Accept       json
+// @Produce      json
+// @Success      200      {object}  map[string]interface{}
+// @Failure      400      {object}  middleware.ErrorResponse "错误响应"
+// @Failure      500      {object}  middleware.ErrorResponse "错误响应"
+// @Router       /api/auth/current-user [get]
+// @Security     Bearer
 func GetCurrentUser(c *gin.Context) {
 	username := c.GetString("username")
 	role := c.GetString("role")
@@ -66,12 +113,19 @@ func GetCurrentUser(c *gin.Context) {
 }
 
 // ChangePassword 修改密码
+// @Summary      修改密码
+// @Description  修改密码
+// @Tags         auth
+// @Accept       json
+// @Produce      json
+// @Param        changePassword  body      ChangePasswordRequest  true  "修改密码请求"
+// @Success      200      {object}  map[string]interface{}
+// @Failure      400      {object}  middleware.ErrorResponse "错误响应"
+// @Failure      500      {object}  middleware.ErrorResponse "错误响应"
+// @Router       /api/auth/change-password [post]
+// @Security     Bearer
 func ChangePassword(c *gin.Context) {
-	var req struct {
-		OldPassword string `json:"oldPassword" binding:"required"`
-		NewPassword string `json:"newPassword" binding:"required"`
-	}
-
+	var req ChangePasswordRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		log.Printf("修改密码请求参数错误: %v\n", err)
 		c.JSON(http.StatusBadRequest, gin.H{

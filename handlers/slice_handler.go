@@ -8,6 +8,18 @@ import (
 )
 
 // UploadSliceHandler 处理切片上传
+// @Summary      上传切片
+// @Description  上传切片
+// @Tags         slices
+// @Accept       multipart/form-data
+// @Produce      json
+// @Param        file  formData  file  true  "切片文件"
+// @Param        caseID  formData  string  true  "病例ID"
+// @Success      200      {object}  map[string]interface{}
+// @Failure      400      {object}  middleware.ErrorResponse "错误响应"
+// @Failure      500      {object}  middleware.ErrorResponse "错误响应"
+// @Router       /api/slice/upload [post]
+// @Security     Bearer
 func UploadSliceHandler(c *gin.Context) {
 	// 1. 获取上传的文件
 	file, err := c.FormFile("file")

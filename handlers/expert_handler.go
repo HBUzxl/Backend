@@ -2,11 +2,23 @@ package handlers
 
 import (
 	"backend/services"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
+// GetExpertsHandler godoc
+// @Summary      获取专家列表
+// @Description  获取所有专家
+// @Tags         experts
+// @Accept       json
+// @Produce      json
+// @Success      200      {object}  map[string][]models.Expert
+// @Failure      400      {object}  map[string]string
+// @Failure      500      {object}  map[string]string
+// @Router       /api/expert [get]
+// @Security     Bearer
 func GetExpertsHandler(c *gin.Context) {
 	experts, err := services.GetExperts()
 	if err != nil {
@@ -18,4 +30,57 @@ func GetExpertsHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"experts": experts,
 	})
+}
+
+// GetPendingCasesByExpertUsernameHandler godoc
+// @Summary      获取专家待处理的病例
+// @Description  根据专家用户名获取所有待处理的病例
+// @Tags         cases
+// @Accept       json
+// @Produce      json
+// @Param        username  path      string  true  "专家用户名"
+// @Success      200      {object}  map[string][]models.Case
+// @Failure      400      {object}  map[string]string
+// @Failure      500      {object}  map[string]string
+// @Router       /api/case/pending/{username} [get]
+// @Security     Bearer
+func GetPendingCasesByExpertUsernameHandler(c *gin.Context) {
+	username := c.Param("username")
+	fmt.Println(username)
+	if username == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing expertID"})
+		return
+	}
+	cases, err := services.GetPendingCasesByExpertUsername(username)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Get Pending Cases By ExpertID " + err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"cases": cases})
+}
+
+// GetDiagnosedCasesByExpertUsernameHandler godoc
+// @Summary      获取专家已诊断的病例
+// @Description  根据专家用户名获取所有已诊断的病例
+// @Tags         cases
+// @Accept       json
+// @Produce      json
+// @Param        username  path      string  true  "专家用户名"
+// @Success      200      {object}  map[string][]models.Case
+// @Failure      400      {object}  map[string]string
+// @Failure      500      {object}  map[string]string
+// @Router       /api/case/diagnosed/{username} [get]
+// @Security     Bearer
+func GetDiagnosedCasesByExpertUsernameHandler(c *gin.Context) {
+	username := c.Param("username")
+	if username == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing expertID"})
+		return
+	}
+	cases, err := services.GetDiagnosedCasesByExpertUsername(username)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Get Diagnosed Cases By ExpertID " + err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"cases": cases})
 }

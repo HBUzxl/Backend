@@ -1,0 +1,1187 @@
+basePath: /api
+definitions:
+  handlers.ChangePasswordRequest:
+    properties:
+      newPassword:
+        description: |-
+          新密码
+          Required: true
+          Example: 654321
+        example: "654321"
+        type: string
+      oldPassword:
+        description: |-
+          旧密码
+          Required: true
+          Example: 123456
+        example: "123456"
+        type: string
+    required:
+    - newPassword
+    - oldPassword
+    type: object
+  handlers.LoginRequest:
+    properties:
+      password:
+        description: |-
+          密码
+          Required: true
+          Example: 123456
+        example: "123456"
+        type: string
+      role:
+        description: |-
+          角色
+          Required: true
+          Example: admin
+        example: admin
+        type: string
+      username:
+        description: |-
+          用户名
+          Required: true
+          Example: admin
+        example: admin
+        type: string
+    required:
+    - password
+    - role
+    - username
+    type: object
+  middleware.ErrorResponse:
+    properties:
+      error:
+        example: 错误信息
+        type: string
+    type: object
+  models.Appointment:
+    properties:
+      appointmentAt:
+        description: 预约时间
+        type: string
+      appointmentID:
+        description: 预约编号
+        type: string
+      appointmentStatus:
+        description: 预约状态
+        type: string
+      clinicalDoctor:
+        description: 临床医生
+        type: string
+      expert:
+        allOf:
+        - $ref: '#/definitions/models.Expert'
+        description: 专家
+      expertID:
+        description: 关联专家
+        type: integer
+      hospital:
+        description: 送检医院
+        type: string
+      id:
+        description: ID
+        type: integer
+      patientAge:
+        description: 年龄
+        type: string
+      patientGender:
+        description: 性别
+        type: string
+      patientName:
+        description: 姓名
+        type: string
+      patientPhone:
+        description: 联系电话
+        type: string
+      remarks:
+        description: 备注
+        type: string
+      submitAt:
+        description: 提交时间
+        type: string
+      surgeryLocation:
+        description: 手术部位
+        type: string
+    type: object
+  models.Attachment:
+    properties:
+      caseID:
+        description: 案例ID
+        type: string
+      fileID:
+        description: 附件ID
+        type: string
+      fileName:
+        description: 附件名称
+        type: string
+      filePath:
+        description: 附件路径
+        type: string
+      fileSize:
+        description: 附件大小
+        type: integer
+      id:
+        description: ID
+        type: integer
+    type: object
+  models.Case:
+    properties:
+      attachments:
+        description: 关联附件
+        items:
+          $ref: '#/definitions/models.Attachment'
+        type: array
+      barCode:
+        description: 条形码
+        type: string
+      bedNo:
+        description: 床号
+        type: string
+      biopsySite:
+        description: 取材部位
+        type: string
+      caseID:
+        description: 病例号
+        type: string
+      caseStatus:
+        description: 病例状态
+        type: string
+      checkupNo:
+        description: 体检编号
+        type: string
+      clinicalData:
+        description: 临床资料
+        type: string
+      clinicalDiagnosis:
+        description: 临床诊断
+        type: string
+      clinicalPhone:
+        description: 临床电话
+        type: string
+      consultationID:
+        description: 会诊编号
+        type: string
+      diagnoseAt:
+        description: 诊断时间
+        type: string
+      diagnosisContent:
+        description: 诊断内容
+        type: string
+      expert:
+        allOf:
+        - $ref: '#/definitions/models.Expert'
+        description: 专家
+      expertID:
+        description: 关联专家
+        type: integer
+      grossFinding:
+        description: 肉眼所见
+        type: string
+      hospital:
+        description: 送检医院
+        type: string
+      id:
+        description: ID
+        type: integer
+      immunohistochemistry:
+        description: 免疫组化
+        type: string
+      inpatientNo:
+        description: 门诊、住院号
+        type: string
+      maritalStatus:
+        description: 婚姻状况
+        type: string
+      pathologicalDiagnosis:
+        description: 病理诊断
+        type: string
+      pathologyType:
+        description: 病理类型
+        type: string
+      patientAddress:
+        description: 病人地址
+        type: string
+      patientAge:
+        description: 病人年龄
+        type: integer
+      patientGender:
+        description: 病人性别
+        type: string
+      patientName:
+        description: 病人姓名
+        type: string
+      patientPhone:
+        description: 病人电话
+        type: string
+      patientType:
+        description: 病人类型
+        type: string
+      printCount:
+        description: 打印
+        type: integer
+      receiveDate:
+        description: 接收日期
+        type: string
+      remarks:
+        description: 备注
+        type: string
+      sampleDate:
+        description: 采样日期
+        type: string
+      slices:
+        description: 关联切片
+        items:
+          $ref: '#/definitions/models.Slice'
+        type: array
+      submitAt:
+        description: 时间
+        type: string
+      tissueCount:
+        description: 组织数量
+        type: integer
+    type: object
+  models.Expert:
+    properties:
+      cases:
+        description: 关联字段
+        items:
+          $ref: '#/definitions/models.Case'
+        type: array
+      createdAt:
+        description: 创建时间
+        type: string
+      hospital:
+        description: 医院
+        type: string
+      id:
+        description: 专家ID
+        type: integer
+      nickName:
+        description: 专家名称
+        type: string
+      password:
+        description: 专家密码
+        type: string
+      phone:
+        description: 电话
+        type: string
+      role:
+        description: 专家角色
+        type: string
+      updatedAt:
+        description: 更新时间
+        type: string
+      username:
+        description: 专家用户名
+        type: string
+    type: object
+  models.Slice:
+    properties:
+      caseID:
+        description: 病例ID
+        type: string
+      fileName:
+        description: 文件名
+        type: string
+      filePath:
+        description: 文件路径
+        type: string
+      fileSize:
+        description: 文件大小
+        type: integer
+      id:
+        description: ID
+        type: integer
+      sliceID:
+        description: 切片号
+        type: string
+    type: object
+host: localhost:8085
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is the API documentation for the Online Diagnosis System.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Online Diagnosis System API
+  version: "1.0"
+paths:
+  /api/appointment/{appointmentID}:
+    delete:
+      consumes:
+      - application/json
+      description: 删除预约
+      parameters:
+      - description: 预约ID
+        in: path
+        name: appointmentID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+        "500":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: 删除预约
+      tags:
+      - appointments
+    get:
+      consumes:
+      - application/json
+      description: 根据预约ID获取预约
+      parameters:
+      - description: 预约ID
+        in: path
+        name: appointmentID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              $ref: '#/definitions/models.Appointment'
+            type: object
+        "400":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+        "500":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: 根据预约ID获取预约
+      tags:
+      - appointments
+  /api/appointment/all:
+    get:
+      consumes:
+      - application/json
+      description: 获取所有预约信息
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/models.Appointment'
+              type: array
+            type: object
+        "400":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+        "500":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: 获取所有预约信息
+      tags:
+      - appointments
+  /api/appointment/submit:
+    post:
+      consumes:
+      - application/json
+      description: 提交预约
+      parameters:
+      - description: 预约数据
+        in: body
+        name: appointmentData
+        required: true
+        schema:
+          $ref: '#/definitions/models.Appointment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              $ref: '#/definitions/models.Appointment'
+            type: object
+        "400":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+        "500":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: 提交预约
+      tags:
+      - appointments
+  /api/attachment/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: 上传附件
+      parameters:
+      - description: 附件文件
+        in: formData
+        name: file
+        required: true
+        type: file
+      - description: 病例ID
+        in: formData
+        name: caseID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+        "500":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: 上传附件
+      tags:
+      - attachments
+  /api/auth/change-password:
+    post:
+      consumes:
+      - application/json
+      description: 修改密码
+      parameters:
+      - description: 修改密码请求
+        in: body
+        name: changePassword
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.ChangePasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+        "500":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: 修改密码
+      tags:
+      - auth
+  /api/auth/current-user:
+    get:
+      consumes:
+      - application/json
+      description: 获取当前登录用户信息
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+        "500":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: 获取当前登录用户信息
+      tags:
+      - auth
+  /api/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: 登录
+      parameters:
+      - description: 登录请求
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+        "500":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+      summary: 登录
+      tags:
+      - auth
+  /api/case/{caseID}:
+    delete:
+      consumes:
+      - application/json
+      description: 删除病例
+      parameters:
+      - description: 病例ID
+        in: path
+        name: caseID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+        "500":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: 删除病例
+      tags:
+      - cases
+    get:
+      consumes:
+      - application/json
+      description: 根据病例ID获取病例
+      parameters:
+      - description: 病例ID
+        in: path
+        name: caseID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              $ref: '#/definitions/models.Case'
+            type: object
+        "400":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+        "500":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: 根据病例ID获取病例
+      tags:
+      - cases
+  /api/case/{caseID}/print:
+    post:
+      consumes:
+      - application/json
+      description: 增加打印次数
+      parameters:
+      - description: 病例ID
+        in: path
+        name: caseID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+        "500":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: 增加打印次数
+      tags:
+      - cases
+  /api/case/all:
+    get:
+      consumes:
+      - application/json
+      description: 获取所有病例
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/models.Case'
+              type: array
+            type: object
+        "400":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+        "500":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: 获取所有病例
+      tags:
+      - cases
+  /api/case/diagnosed:
+    post:
+      consumes:
+      - application/json
+      description: 获取所有已诊断的病例
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/models.Case'
+              type: array
+            type: object
+        "400":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+        "500":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: 获取已诊断的病例
+      tags:
+      - cases
+  /api/case/diagnosed/{username}:
+    get:
+      consumes:
+      - application/json
+      description: 根据专家用户名获取所有已诊断的病例
+      parameters:
+      - description: 专家用户名
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/models.Case'
+              type: array
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: 获取专家已诊断的病例
+      tags:
+      - cases
+  /api/case/excel:
+    get:
+      consumes:
+      - application/json
+      description: 导出病例Excel
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+        "500":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: 导出病例Excel
+      tags:
+      - cases
+  /api/case/pending/{username}:
+    get:
+      consumes:
+      - application/json
+      description: 根据专家用户名获取所有待处理的病例
+      parameters:
+      - description: 专家用户名
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/models.Case'
+              type: array
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: 获取专家待处理的病例
+      tags:
+      - cases
+  /api/case/pendingdiagnosis:
+    post:
+      consumes:
+      - application/json
+      description: 获取所有待诊断的病例
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/models.Case'
+              type: array
+            type: object
+        "400":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+        "500":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: 获取待诊断的病例
+      tags:
+      - cases
+  /api/case/returned:
+    post:
+      consumes:
+      - application/json
+      description: 获取所有已退回的病例
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/models.Case'
+              type: array
+            type: object
+        "400":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+        "500":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: 获取已退回的病例
+      tags:
+      - cases
+  /api/case/submit:
+    post:
+      consumes:
+      - application/json
+      description: 提交病例
+      parameters:
+      - description: 病例数据
+        in: body
+        name: caseData
+        required: true
+        schema:
+          $ref: '#/definitions/models.Case'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              $ref: '#/definitions/models.Case'
+            type: object
+        "400":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+        "500":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: 提交病例
+      tags:
+      - cases
+  /api/case/toDiagnosed/{caseID}:
+    post:
+      consumes:
+      - application/json
+      description: 更新状态：到已诊断
+      parameters:
+      - description: 病例ID
+        in: path
+        name: caseID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+        "500":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: 更新状态：到已诊断
+      tags:
+      - cases
+  /api/case/toPendingdiagnosis/{caseID}:
+    post:
+      consumes:
+      - application/json
+      description: 更新状态：到待诊断
+      parameters:
+      - description: 病例ID
+        in: path
+        name: caseID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+        "500":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: 更新状态：到待诊断
+      tags:
+      - cases
+  /api/case/toReturned/{caseID}:
+    post:
+      consumes:
+      - application/json
+      description: 更新状态：到被退回
+      parameters:
+      - description: 病例ID
+        in: path
+        name: caseID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+        "500":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: 更新状态：到被退回
+      tags:
+      - cases
+  /api/case/toWithdraw/{caseID}:
+    post:
+      consumes:
+      - application/json
+      description: 更新状态：到撤回
+      parameters:
+      - description: 病例ID
+        in: path
+        name: caseID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+        "500":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: 更新状态：到撤回
+      tags:
+      - cases
+  /api/case/unsubmitted:
+    post:
+      consumes:
+      - application/json
+      description: 获取所有未提交的病例
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/models.Case'
+              type: array
+            type: object
+        "400":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+        "500":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: 获取未提交的病例
+      tags:
+      - cases
+  /api/case/withdraw:
+    post:
+      consumes:
+      - application/json
+      description: 获取所有已撤回的病例
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/models.Case'
+              type: array
+            type: object
+        "400":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+        "500":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: 获取已撤回的病例
+      tags:
+      - cases
+  /api/expert:
+    get:
+      consumes:
+      - application/json
+      description: 获取所有专家
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/models.Expert'
+              type: array
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: 获取专家列表
+      tags:
+      - experts
+  /api/slice/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: 上传切片
+      parameters:
+      - description: 切片文件
+        in: formData
+        name: file
+        required: true
+        type: file
+      - description: 病例ID
+        in: formData
+        name: caseID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+        "500":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/middleware.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: 上传切片
+      tags:
+      - slices
+securityDefinitions:
+  Bearer:
+    description: 'Enter the token with the `Bearer: ` prefix, e.g. "Bearer abcde12345".'
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

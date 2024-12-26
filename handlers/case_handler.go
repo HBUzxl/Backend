@@ -3,13 +3,22 @@ package handlers
 import (
 	"backend/models"
 	"backend/services"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 // GetUnsubmitCasesHandler 获取未提交的病例
+// @Summary      获取未提交的病例
+// @Description  获取所有未提交的病例
+// @Tags         cases
+// @Accept       json
+// @Produce      json
+// @Success      200      {object}  map[string][]models.Case
+// @Failure      400      {object}  middleware.ErrorResponse "错误响应"
+// @Failure      500      {object}  middleware.ErrorResponse "错误响应"
+// @Router       /api/case/unsubmitted [post]
+// @Security     Bearer
 func GetUnsubmitCasesHandler(c *gin.Context) {
 	cases, err := services.GetUnsubmitCases()
 	if err != nil {
@@ -24,6 +33,16 @@ func GetUnsubmitCasesHandler(c *gin.Context) {
 }
 
 // GetPendingDiagnosisCasesHandler 获取待诊断的病例
+// @Summary      获取待诊断的病例
+// @Description  获取所有待诊断的病例
+// @Tags         cases
+// @Accept       json
+// @Produce      json
+// @Success      200      {object}  map[string][]models.Case
+// @Failure      400      {object}  middleware.ErrorResponse "错误响应"
+// @Failure      500      {object}  middleware.ErrorResponse "错误响应"
+// @Router       /api/case/pendingdiagnosis [post]
+// @Security     Bearer
 func GetPendingDiagnosisCasesHandler(c *gin.Context) {
 	cases, err := services.GetPendingDiagnosisCases()
 	if err != nil {
@@ -38,6 +57,16 @@ func GetPendingDiagnosisCasesHandler(c *gin.Context) {
 }
 
 // GetDiagnosedCasesHandler 获取已诊断的病例
+// @Summary      获取已诊断的病例
+// @Description  获取所有已诊断的病例
+// @Tags         cases
+// @Accept       json
+// @Produce      json
+// @Success      200      {object}  map[string][]models.Case
+// @Failure      400      {object}  middleware.ErrorResponse "错误响应"
+// @Failure      500      {object}  middleware.ErrorResponse "错误响应"
+// @Router       /api/case/diagnosed [post]
+// @Security     Bearer
 func GetDiagnosedCasesHandler(c *gin.Context) {
 	cases, err := services.GetDiagnosedCases()
 	if err != nil {
@@ -52,6 +81,16 @@ func GetDiagnosedCasesHandler(c *gin.Context) {
 }
 
 // GetReturnedCasesHandler 获取已退回的病例
+// @Summary      获取已退回的病例
+// @Description  获取所有已退回的病例
+// @Tags         cases
+// @Accept       json
+// @Produce      json
+// @Success      200      {object}  map[string][]models.Case
+// @Failure      400      {object}  middleware.ErrorResponse "错误响应"
+// @Failure      500      {object}  middleware.ErrorResponse "错误响应"
+// @Router       /api/case/returned [post]
+// @Security     Bearer
 func GetReturnedCasesHandler(c *gin.Context) {
 	cases, err := services.GetReturnedCases()
 	if err != nil {
@@ -66,6 +105,16 @@ func GetReturnedCasesHandler(c *gin.Context) {
 }
 
 // GetWithdrawCasesHandler 获取已撤回的病例
+// @Summary      获取已撤回的病例
+// @Description  获取所有已撤回的病例
+// @Tags         cases
+// @Accept       json
+// @Produce      json
+// @Success      200      {object}  map[string][]models.Case
+// @Failure      400      {object}  middleware.ErrorResponse "错误响应"
+// @Failure      500      {object}  middleware.ErrorResponse "错误响应"
+// @Router       /api/case/withdraw [post]
+// @Security     Bearer
 func GetWithdrawCasesHandler(c *gin.Context) {
 	cases, err := services.GetWithdrawCases()
 	if err != nil {
@@ -80,6 +129,16 @@ func GetWithdrawCasesHandler(c *gin.Context) {
 }
 
 // GetAllCasesHandler 获取所有病例
+// @Summary      获取所有病例
+// @Description  获取所有病例
+// @Tags         cases
+// @Accept       json
+// @Produce      json
+// @Success      200      {object}  map[string][]models.Case
+// @Failure      400      {object}  middleware.ErrorResponse "错误响应"
+// @Failure      500      {object}  middleware.ErrorResponse "错误响应"
+// @Router       /api/case/all [get]
+// @Security     Bearer
 func GetAllCasesHandler(c *gin.Context) {
 	cases, err := services.GetAllCases()
 	if err != nil {
@@ -94,6 +153,17 @@ func GetAllCasesHandler(c *gin.Context) {
 }
 
 // GetCaseByCaseIDHandler 根据病例ID获取病例
+// @Summary      根据病例ID获取病例
+// @Description  根据病例ID获取病例
+// @Tags         cases
+// @Accept       json
+// @Produce      json
+// @Param        caseID  path      string  true  "病例ID"
+// @Success      200      {object}  map[string]models.Case
+// @Failure      400      {object}  middleware.ErrorResponse "错误响应"
+// @Failure      500      {object}  middleware.ErrorResponse "错误响应"
+// @Router       /api/case/{caseID} [get]
+// @Security     Bearer
 func GetCaseByCaseIDHandler(c *gin.Context) {
 	caseID := c.Param("caseID")
 	if caseID == "" {
@@ -110,6 +180,17 @@ func GetCaseByCaseIDHandler(c *gin.Context) {
 }
 
 // UpdatePendingCaseHandler 更新状态：到待诊断
+// @Summary      更新状态：到待诊断
+// @Description  更新状态：到待诊断
+// @Tags         cases
+// @Accept       json
+// @Produce      json
+// @Param        caseID  path      string  true  "病例ID"
+// @Success      200      {object}  map[string]string
+// @Failure      400      {object}  middleware.ErrorResponse "错误响应"
+// @Failure      500      {object}  middleware.ErrorResponse "错误响应"
+// @Router       /api/case/toPendingdiagnosis/{caseID} [post]
+// @Security     Bearer
 func UpdatePendingCaseHandler(c *gin.Context) {
 	caseID := c.Param("caseID")
 	if caseID == "" {
@@ -125,6 +206,17 @@ func UpdatePendingCaseHandler(c *gin.Context) {
 }
 
 // UpdateDiagnosedCaseHandler 更新状态：到已诊断
+// @Summary      更新状态：到已诊断
+// @Description  更新状态：到已诊断
+// @Tags         cases
+// @Accept       json
+// @Produce      json
+// @Param        caseID  path      string  true  "病例ID"
+// @Success      200      {object}  map[string]string
+// @Failure      400      {object}  middleware.ErrorResponse "错误响应"
+// @Failure      500      {object}  middleware.ErrorResponse "错误响应"
+// @Router       /api/case/toDiagnosed/{caseID} [post]
+// @Security     Bearer
 func UpdateDiagnosedCaseHandler(c *gin.Context) {
 	caseID := c.Param("caseID")
 	if caseID == "" {
@@ -140,6 +232,17 @@ func UpdateDiagnosedCaseHandler(c *gin.Context) {
 }
 
 // UpdateReturnedCaseHandler 更新状态：到被退回
+// @Summary      更新状态：到被退回
+// @Description  更新状态：到被退回
+// @Tags         cases
+// @Accept       json
+// @Produce      json
+// @Param        caseID  path      string  true  "病例ID"
+// @Success      200      {object}  map[string]string
+// @Failure      400      {object}  middleware.ErrorResponse "错误响应"
+// @Failure      500      {object}  middleware.ErrorResponse "错误响应"
+// @Router       /api/case/toReturned/{caseID} [post]
+// @Security     Bearer
 func UpdateReturnedCaseHandler(c *gin.Context) {
 	caseID := c.Param("caseID")
 	if caseID == "" {
@@ -155,6 +258,17 @@ func UpdateReturnedCaseHandler(c *gin.Context) {
 }
 
 // UpdateWithdrawCaseHandler 更新状态：到撤回
+// @Summary      更新状态：到撤回
+// @Description  更新状态：到撤回
+// @Tags         cases
+// @Accept       json
+// @Produce      json
+// @Param        caseID  path      string  true  "病例ID"
+// @Success      200      {object}  map[string]string
+// @Failure      400      {object}  middleware.ErrorResponse "错误响应"
+// @Failure      500      {object}  middleware.ErrorResponse "错误响应"
+// @Router       /api/case/toWithdraw/{caseID} [post]
+// @Security     Bearer
 func UpdateWithdrawCaseHandler(c *gin.Context) {
 	caseID := c.Param("caseID")
 	if caseID == "" {
@@ -170,6 +284,17 @@ func UpdateWithdrawCaseHandler(c *gin.Context) {
 }
 
 // IncreasePrintCountHandler 增加打印次数
+// @Summary      增加打印次数
+// @Description  增加打印次数
+// @Tags         cases
+// @Accept       json
+// @Produce      json
+// @Param        caseID  path      string  true  "病例ID"
+// @Success      200      {object}  map[string]string
+// @Failure      400      {object}  middleware.ErrorResponse "错误响应"
+// @Failure      500      {object}  middleware.ErrorResponse "错误响应"
+// @Router       /api/case/{caseID}/print [post]
+// @Security     Bearer
 func IncreasePrintCountHandler(c *gin.Context) {
 	caseID := c.Param("caseID")
 	if caseID == "" {
@@ -185,6 +310,17 @@ func IncreasePrintCountHandler(c *gin.Context) {
 }
 
 // SubmitCaseHandler 提交病例
+// @Summary      提交病例
+// @Description  提交病例
+// @Tags         cases
+// @Accept       json
+// @Produce      json
+// @Param        caseData  body      models.Case  true  "病例数据"
+// @Success      200      {object}  map[string]models.Case
+// @Failure      400      {object}  middleware.ErrorResponse "错误响应"
+// @Failure      500      {object}  middleware.ErrorResponse "错误响应"
+// @Router       /api/case/submit [post]
+// @Security     Bearer
 func SubmitCaseHandler(c *gin.Context) {
 	caseData := models.Case{}
 	err := c.BindJSON(&caseData)
@@ -202,6 +338,16 @@ func SubmitCaseHandler(c *gin.Context) {
 }
 
 // ExportExcelHandler 导出病例Excel
+// @Summary      导出病例Excel
+// @Description  导出病例Excel
+// @Tags         cases
+// @Accept       json
+// @Produce      json
+// @Success      200      {object}  map[string]string
+// @Failure      400      {object}  middleware.ErrorResponse "错误响应"
+// @Failure      500      {object}  middleware.ErrorResponse "错误响应"
+// @Router       /api/case/excel [get]
+// @Security     Bearer
 func ExportExcelHandler(c *gin.Context) {
 	excelData, err := services.ExportExcel()
 	if err != nil {
@@ -214,6 +360,17 @@ func ExportExcelHandler(c *gin.Context) {
 }
 
 // DeleteCaseHandler 删除病例
+// @Summary      删除病例
+// @Description  删除病例
+// @Tags         cases
+// @Accept       json
+// @Produce      json
+// @Param        caseID  path      string  true  "病例ID"
+// @Success      200      {object}  map[string]string
+// @Failure      400      {object}  middleware.ErrorResponse "错误响应"
+// @Failure      500      {object}  middleware.ErrorResponse "错误响应"
+// @Router       /api/case/{caseID} [delete]
+// @Security     Bearer
 func DeleteCaseHandler(c *gin.Context) {
 	caseID := c.Param("caseID")
 	if caseID == "" {
@@ -226,20 +383,4 @@ func DeleteCaseHandler(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Delete Case Success"})
-}
-
-// GetPendingCasesByExpertUsernameHandler 获取专家待处理的病例
-func GetPendingCasesByExpertUsernameHandler(c *gin.Context) {
-	username := c.Param("username")
-	fmt.Println(username)
-	if username == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing expertID"})
-		return
-	}
-	cases, err := services.GetPendingCasesByExpertUsername(username)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Get Pending Cases By ExpertID " + err.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"cases": cases})
 }

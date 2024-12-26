@@ -6,9 +6,31 @@ import (
 	"log"
 	"time"
 
+	_ "backend/docs" // 这里将会引入自动生成的docs
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
+
+// @title           Online Diagnosis System API
+// @version         1.0
+// @description     This is the API documentation for the Online Diagnosis System.
+// @termsOfService  http://swagger.io/terms/
+
+// @contact.name   API Support
+// @contact.url    http://www.swagger.io/support
+// @contact.email  support@swagger.io
+
+// @license.name  Apache 2.0
+// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host      localhost:8085
+// @BasePath  /api
+
+// @securityDefinitions.apikey Bearer
+// @in header
+// @name Authorization
+// @description Enter the token with the `Bearer: ` prefix, e.g. "Bearer abcde12345".
 
 func main() {
 	// 初始化配置

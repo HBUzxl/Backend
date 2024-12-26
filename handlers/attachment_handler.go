@@ -8,6 +8,18 @@ import (
 )
 
 // UploadAttachmentHandler 处理附件上传
+// @Summary      上传附件
+// @Description  上传附件
+// @Tags         attachments
+// @Accept       multipart/form-data
+// @Produce      json
+// @Param        file  formData  file  true  "附件文件"
+// @Param        caseID  formData  string  true  "病例ID"
+// @Success      200      {object}  map[string]interface{}
+// @Failure      400      {object}  middleware.ErrorResponse "错误响应"
+// @Failure      500      {object}  middleware.ErrorResponse "错误响应"
+// @Router       /api/attachment/upload [post]
+// @Security     Bearer
 func UploadAttachmentHandler(c *gin.Context) {
 	// 1. 获取上传的文件
 	file, err := c.FormFile("file")
