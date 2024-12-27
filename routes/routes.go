@@ -73,6 +73,7 @@ func InitRoutes(r *gin.Engine) {
 				appointmentGroup.POST("/submit", handlers.SubmitAppointmentHandler)           // 提交预约
 				appointmentGroup.GET("/:appointmentID", handlers.GetAppointmentHandler)       // 根据预约ID获取预约
 				appointmentGroup.DELETE("/:appointmentID", handlers.DeleteAppointmentHandler) // 删除预约
+
 			}
 
 			// 专家相关路由
@@ -83,6 +84,9 @@ func InitRoutes(r *gin.Engine) {
 				expertGroup.GET("/all/:username", handlers.GetAllCasesByExpertUsernameHandler) // 根据专家用户名获取待诊断的病例
 
 				expertGroup.GET("/excel/:username", handlers.ExportExcelCasesByUsernameHandler) // 导出Excel，根据专家用户名获取待诊断的病例
+
+				expertGroup.GET("/:username/appointments", handlers.GetAppointmentsByUsernameHandler) // 根据专家用户名获取预约
+
 			}
 
 			// 切片相关路由

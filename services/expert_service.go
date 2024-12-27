@@ -180,3 +180,20 @@ func ExportExcelCasesByUsername(username string) ([]byte, error) {
 	}
 	return buf.Bytes(), nil
 }
+
+// GetAppointmentsByUsername 根据专家用户名获取所有预约
+func GetAppointmentsByUsername(username string) ([]models.Appointment, error) {
+	var appointments []models.Appointment
+	expert, err := GetExpertID(username)
+	if err != nil {
+		return nil, err
+	}
+	tx := config.DB.Debug().
+		Preload("Expert").
+		Where("expert_id = ?", expert.Id).
+		Find(&appointments)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	return appointments, nil
+}

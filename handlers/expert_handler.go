@@ -119,7 +119,7 @@ func GetAllCasesByExpertUsernameHandler(c *gin.Context) {
 // @Param        username  path      string  true  "专家用户名"
 // @Success      200      {object}  map[string]string
 // @Failure      500      {object}  map[string]string
-// @Router       /api/case/export/{username} [get]
+// @Router       /api/expert/excel/{username} [get]
 // @Security     Bearer
 func ExportExcelCasesByUsernameHandler(c *gin.Context) {
 	username := c.Param("username")
@@ -135,4 +135,30 @@ func ExportExcelCasesByUsernameHandler(c *gin.Context) {
 	c.Header("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 	c.Header("Content-Disposition", "attachment; filename=统计报表.xlsx")
 	c.Data(http.StatusOK, "application/octet-stream", excelData)
+}
+
+// GetAppointmentsByUsernameHandler godoc
+// @Summary      获取专家所有预约
+// @Description  根据专家用户名获取所有预约
+// @Tags         appointments
+// @Accept       json
+// @Produce      json
+// @Param        username  path      string  true  "专家用户名"
+// @Success      200      {object}  map[string][]models.Appointment
+// @Failure      400      {object}  map[string]string
+// @Failure      500      {object}  map[string]string
+// @Router       /api/expert/{username}/appointments [get]
+// @Security     Bearer
+func GetAppointmentsByUsernameHandler(c *gin.Context) {
+	username := c.Param("username")
+	if username == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing expertID"})
+		return
+	}
+	appointments, err := services.GetAppointmentsByUsername(username)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Get Appointments By ExpertID " + err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"appointments": appointments})
 }
