@@ -67,6 +67,24 @@ func GetDiagnosedCasesByExpertUsername(username string) ([]models.Case, error) {
 	return cases, nil
 }
 
+// GetReturnedCasesByExpertUsername 获取专家已退回的病例
+func GetReturnedCasesByExpertUsername(username string) ([]models.Case, error) {
+	var cases []models.Case
+	expert, err := GetExpertID(username)
+	if err != nil {
+		return nil, err
+	}
+	tx := config.DB.Debug().
+		Preload("Expert").
+		Preload("Slices").
+		Where("expert_id = ? AND case_status = ?", expert.Id, "returned").
+		Find(&cases)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	return cases, nil
+}
+
 // GetAllCasesByExpertUsername 根据专家用户名获取所有病例
 func GetAllCasesByExpertUsername(username string) ([]models.Case, error) {
 	var cases []models.Case
