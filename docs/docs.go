@@ -604,12 +604,6 @@ const docTemplate = `{
                             }
                         }
                     },
-                    "400": {
-                        "description": "错误响应",
-                        "schema": {
-                            "$ref": "#/definitions/middleware.ErrorResponse"
-                        }
-                    },
                     "500": {
                         "description": "错误响应",
                         "schema": {
@@ -767,6 +761,67 @@ const docTemplate = `{
                         "description": "错误响应",
                         "schema": {
                             "$ref": "#/definitions/middleware.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/case/returned/{username}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "根据专家用户名获取所有已退回的病例",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cases"
+                ],
+                "summary": "获取专家已退回的病例",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "专家用户名",
+                        "name": "username",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/models.Case"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
                         }
                     }
                 }
@@ -1126,6 +1181,67 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/case/withdraw/{username}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "根据专家用户名获取所有已撤回的病例",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cases"
+                ],
+                "summary": "获取专家已撤回的病例",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "专家用户名",
+                        "name": "username",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/models.Case"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/case/{caseID}": {
             "get": {
                 "security": [
@@ -1307,6 +1423,168 @@ const docTemplate = `{
                                 "type": "array",
                                 "items": {
                                     "$ref": "#/definitions/models.Expert"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/expert/all/{username}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "根据专家用户名获取所有病例",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cases"
+                ],
+                "summary": "获取专家所有病例",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "专家用户名",
+                        "name": "username",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/models.Case"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/expert/excel/{username}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "根据专家用户名导出所有病例",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cases"
+                ],
+                "summary": "导出专家所有病例",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "专家用户名",
+                        "name": "username",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/expert/{username}/appointments": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "根据专家用户名获取所有预约",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "appointments"
+                ],
+                "summary": "获取专家所有预约",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "专家用户名",
+                        "name": "username",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/models.Appointment"
                                 }
                             }
                         }
@@ -1589,7 +1867,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "consultationID": {
-                    "description": "会诊编号",
+                    "description": "诊断相关",
                     "type": "string"
                 },
                 "diagnoseAt": {
@@ -1597,7 +1875,11 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "diagnosisContent": {
-                    "description": "诊断内容",
+                    "description": "诊断内容、诊断结果",
+                    "type": "string"
+                },
+                "diagnosisRemarks": {
+                    "description": "诊断备注",
                     "type": "string"
                 },
                 "expert": {
@@ -1607,6 +1889,10 @@ const docTemplate = `{
                             "$ref": "#/definitions/models.Expert"
                         }
                     ]
+                },
+                "expertDiagnosisOpinion": {
+                    "description": "专家诊断意见",
+                    "type": "string"
                 },
                 "expertID": {
                     "description": "关联专家",
@@ -1634,6 +1920,10 @@ const docTemplate = `{
                 },
                 "maritalStatus": {
                     "description": "婚姻状况",
+                    "type": "string"
+                },
+                "mirrorDescription": {
+                    "description": "镜下描述",
                     "type": "string"
                 },
                 "pathologicalDiagnosis": {

@@ -159,18 +159,24 @@ definitions:
         description: 临床电话
         type: string
       consultationID:
-        description: 会诊编号
+        description: 诊断相关
         type: string
       diagnoseAt:
         description: 诊断时间
         type: string
       diagnosisContent:
-        description: 诊断内容
+        description: 诊断内容、诊断结果
+        type: string
+      diagnosisRemarks:
+        description: 诊断备注
         type: string
       expert:
         allOf:
         - $ref: '#/definitions/models.Expert'
         description: 专家
+      expertDiagnosisOpinion:
+        description: 专家诊断意见
+        type: string
       expertID:
         description: 关联专家
         type: integer
@@ -191,6 +197,9 @@ definitions:
         type: string
       maritalStatus:
         description: 婚姻状况
+        type: string
+      mirrorDescription:
+        description: 镜下描述
         type: string
       pathologicalDiagnosis:
         description: 病理诊断
@@ -774,10 +783,6 @@ paths:
             additionalProperties:
               type: string
             type: object
-        "400":
-          description: 错误响应
-          schema:
-            $ref: '#/definitions/middleware.ErrorResponse'
         "500":
           description: 错误响应
           schema:
@@ -882,6 +887,45 @@ paths:
       security:
       - Bearer: []
       summary: 获取已退回的病例
+      tags:
+      - cases
+  /api/case/returned/{username}:
+    get:
+      consumes:
+      - application/json
+      description: 根据专家用户名获取所有已退回的病例
+      parameters:
+      - description: 专家用户名
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/models.Case'
+              type: array
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: 获取专家已退回的病例
       tags:
       - cases
   /api/case/submit:
@@ -1108,6 +1152,45 @@ paths:
       summary: 获取已撤回的病例
       tags:
       - cases
+  /api/case/withdraw/{username}:
+    get:
+      consumes:
+      - application/json
+      description: 根据专家用户名获取所有已撤回的病例
+      parameters:
+      - description: 专家用户名
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/models.Case'
+              type: array
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: 获取专家已撤回的病例
+      tags:
+      - cases
   /api/expert:
     get:
       consumes:
@@ -1141,6 +1224,109 @@ paths:
       summary: 获取专家列表
       tags:
       - experts
+  /api/expert/{username}/appointments:
+    get:
+      consumes:
+      - application/json
+      description: 根据专家用户名获取所有预约
+      parameters:
+      - description: 专家用户名
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/models.Appointment'
+              type: array
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: 获取专家所有预约
+      tags:
+      - appointments
+  /api/expert/all/{username}:
+    get:
+      consumes:
+      - application/json
+      description: 根据专家用户名获取所有病例
+      parameters:
+      - description: 专家用户名
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/models.Case'
+              type: array
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: 获取专家所有病例
+      tags:
+      - cases
+  /api/expert/excel/{username}:
+    get:
+      consumes:
+      - application/json
+      description: 根据专家用户名导出所有病例
+      parameters:
+      - description: 专家用户名
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: 导出专家所有病例
+      tags:
+      - cases
   /api/slice/upload:
     post:
       consumes:
