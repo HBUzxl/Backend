@@ -8,15 +8,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// GetExpertsHandler godoc
+// GetExpertsHandler handles getting experts
 // @Summary      获取专家列表
 // @Description  获取所有专家
 // @Tags         experts
 // @Accept       json
 // @Produce      json
-// @Success      200      {object}  map[string][]models.Expert
-// @Failure      400      {object}  map[string]string
-// @Failure      500      {object}  map[string]string
+// @Success      200  {object}  map[string][]models.Expert
+// @Failure      400  {object}  map[string]string
+// @Failure      500  {object}  map[string]string
 // @Router       /api/expert [get]
 // @Security     Bearer
 func GetExpertsHandler(c *gin.Context) {
@@ -32,16 +32,16 @@ func GetExpertsHandler(c *gin.Context) {
 	})
 }
 
-// GetPendingCasesByExpertUsernameHandler godoc
+// GetPendingCasesByExpertUsernameHandler handles getting pending cases by expert username
 // @Summary      获取专家待处理的病例
 // @Description  根据专家用户名获取所有待处理的病例
 // @Tags         cases
 // @Accept       json
 // @Produce      json
 // @Param        username  path      string  true  "专家用户名"
-// @Success      200      {object}  map[string][]models.Case
-// @Failure      400      {object}  map[string]string
-// @Failure      500      {object}  map[string]string
+// @Success      200  {object}  map[string][]models.Case
+// @Failure      400  {object}  map[string]string
+// @Failure      500  {object}  map[string]string
 // @Router       /api/case/pending/{username} [get]
 // @Security     Bearer
 func GetPendingCasesByExpertUsernameHandler(c *gin.Context) {
@@ -59,16 +59,16 @@ func GetPendingCasesByExpertUsernameHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"cases": cases})
 }
 
-// GetDiagnosedCasesByExpertUsernameHandler godoc
+// GetDiagnosedCasesByExpertUsernameHandler handles getting diagnosed cases by expert username
 // @Summary      获取专家已诊断的病例
 // @Description  根据专家用户名获取所有已诊断的病例
 // @Tags         cases
 // @Accept       json
 // @Produce      json
 // @Param        username  path      string  true  "专家用户名"
-// @Success      200      {object}  map[string][]models.Case
-// @Failure      400      {object}  map[string]string
-// @Failure      500      {object}  map[string]string
+// @Success      200  {object}  map[string][]models.Case
+// @Failure      400  {object}  map[string]string
+// @Failure      500  {object}  map[string]string
 // @Router       /api/case/diagnosed/{username} [get]
 // @Security     Bearer
 func GetDiagnosedCasesByExpertUsernameHandler(c *gin.Context) {
@@ -85,16 +85,16 @@ func GetDiagnosedCasesByExpertUsernameHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"cases": cases})
 }
 
-// GetReturnedCasesByExpertUsernameHandler godoc
+// GetReturnedCasesByExpertUsernameHandler handles getting returned cases by expert username
 // @Summary      获取专家已退回的病例
 // @Description  根据专家用户名获取所有已退回的病例
 // @Tags         cases
 // @Accept       json
 // @Produce      json
 // @Param        username  path      string  true  "专家用户名"
-// @Success      200      {object}  map[string][]models.Case
-// @Failure      400      {object}  map[string]string
-// @Failure      500      {object}  map[string]string
+// @Success      200  {object}  map[string][]models.Case
+// @Failure      400  {object}  map[string]string
+// @Failure      500  {object}  map[string]string
 // @Router       /api/case/returned/{username} [get]
 // @Security     Bearer
 func GetReturnedCasesByExpertUsernameHandler(c *gin.Context) {
@@ -111,15 +111,15 @@ func GetReturnedCasesByExpertUsernameHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"cases": cases})
 }
 
-// GetAllCasesByExpertUsernameHandler godoc
+// GetAllCasesByExpertUsernameHandler handles getting all cases by expert username
 // @Summary      获取专家所有病例
 // @Description  根据专家用户名获取所有病例
 // @Tags         cases
 // @Accept       json
 // @Produce      json
 // @Param        username  path      string  true  "专家用户名"
-// @Success      200      {object}  map[string][]models.Case
-// @Failure      500      {object}  map[string]string
+// @Success      200  {object}  map[string][]models.Case
+// @Failure      500  {object}  map[string]string
 // @Router       /api/expert/all/{username} [get]
 // @Security     Bearer
 func GetAllCasesByExpertUsernameHandler(c *gin.Context) {
@@ -136,16 +136,16 @@ func GetAllCasesByExpertUsernameHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"cases": cases})
 }
 
-// GetWithdrawCasesByExpertUsernameHandler godoc
+// GetWithdrawCasesByExpertUsernameHandler handles getting withdraw cases by expert username
 // @Summary      获取专家已撤回的病例
 // @Description  根据专家用户名获取所有已撤回的病例
 // @Tags         cases
 // @Accept       json
 // @Produce      json
 // @Param        username  path      string  true  "专家用户名"
-// @Success      200      {object}  map[string][]models.Case
-// @Failure      400      {object}  map[string]string
-// @Failure      500      {object}  map[string]string
+// @Success      200  {object}  map[string][]models.Case
+// @Failure      400  {object}  map[string]string
+// @Failure      500  {object}  map[string]string
 // @Router       /api/case/withdraw/{username} [get]
 // @Security     Bearer
 func GetWithdrawCasesByExpertUsernameHandler(c *gin.Context) {
@@ -162,15 +162,15 @@ func GetWithdrawCasesByExpertUsernameHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"cases": cases})
 }
 
-// ExportExcelCasesByUsernameHandler godoc
+// ExportExcelCasesByUsernameHandler handles exporting excel cases by username
 // @Summary      导出专家所有病例
 // @Description  根据专家用户名导出所有病例
 // @Tags         cases
 // @Accept       json
 // @Produce      json
 // @Param        username  path      string  true  "专家用户名"
-// @Success      200      {object}  map[string]string
-// @Failure      500      {object}  map[string]string
+// @Success      200  {object}  map[string]string
+// @Failure      500  {object}  map[string]string
 // @Router       /api/expert/excel/{username} [get]
 // @Security     Bearer
 func ExportExcelCasesByUsernameHandler(c *gin.Context) {
@@ -189,16 +189,16 @@ func ExportExcelCasesByUsernameHandler(c *gin.Context) {
 	c.Data(http.StatusOK, "application/octet-stream", excelData)
 }
 
-// GetAppointmentsByUsernameHandler godoc
+// GetAppointmentsByUsernameHandler handles getting appointments by username
 // @Summary      获取专家所有预约
 // @Description  根据专家用户名获取所有预约
 // @Tags         appointments
 // @Accept       json
 // @Produce      json
 // @Param        username  path      string  true  "专家用户名"
-// @Success      200      {object}  map[string][]models.Appointment
-// @Failure      400      {object}  map[string]string
-// @Failure      500      {object}  map[string]string
+// @Success      200  {object}  map[string][]models.Appointment
+// @Failure      400  {object}  map[string]string
+// @Failure      500  {object}  map[string]string
 // @Router       /api/expert/{username}/appointments [get]
 // @Security     Bearer
 func GetAppointmentsByUsernameHandler(c *gin.Context) {
