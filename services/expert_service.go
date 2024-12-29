@@ -103,6 +103,24 @@ func GetAllCasesByExpertUsername(username string) ([]models.Case, error) {
 	return cases, nil
 }
 
+// GetWithdrawCasesByExpertUsername 根据专家用户名获取所有已撤回的病例
+func GetWithdrawCasesByExpertUsername(username string) ([]models.Case, error) {
+	var cases []models.Case
+	expert, err := GetExpertID(username)
+	if err != nil {
+		return nil, err
+	}
+	tx := config.DB.Debug().
+		Preload("Expert").
+		Preload("Slices").
+		Where("expert_id = ? AND case_status = ?", expert.Id, "withdraw").
+		Find(&cases)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	return cases, nil
+}
+
 // ExportExcelCasesByUsername 根据专家用户名导出所有病例
 func ExportExcelCasesByUsername(username string) ([]byte, error) {
 	var cases []models.Case

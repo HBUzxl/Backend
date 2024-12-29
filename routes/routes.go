@@ -64,6 +64,7 @@ func InitRoutes(r *gin.Engine) {
 				caseGroup.GET("/pending/:username", handlers.GetPendingCasesByExpertUsernameHandler)     // 根据专家用户名获取待诊断的病例
 				caseGroup.GET("/diagnosed/:username", handlers.GetDiagnosedCasesByExpertUsernameHandler) // 根据专家用户名获取已诊断的病例
 				caseGroup.GET("/returned/:username", handlers.GetReturnedCasesByExpertUsernameHandler)   // 根据专家用户名获取已退回的病例
+				caseGroup.GET("/withdraw/:username", handlers.GetWithdrawCasesByExpertUsernameHandler)   // 根据专家用户名获取已撤回的病例
 			}
 
 			// 预约相关路由

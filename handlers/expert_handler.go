@@ -136,6 +136,32 @@ func GetAllCasesByExpertUsernameHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"cases": cases})
 }
 
+// GetWithdrawCasesByExpertUsernameHandler godoc
+// @Summary      获取专家已撤回的病例
+// @Description  根据专家用户名获取所有已撤回的病例
+// @Tags         cases
+// @Accept       json
+// @Produce      json
+// @Param        username  path      string  true  "专家用户名"
+// @Success      200      {object}  map[string][]models.Case
+// @Failure      400      {object}  map[string]string
+// @Failure      500      {object}  map[string]string
+// @Router       /api/case/withdraw/{username} [get]
+// @Security     Bearer
+func GetWithdrawCasesByExpertUsernameHandler(c *gin.Context) {
+	username := c.Param("username")
+	if username == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing expertID"})
+		return
+	}
+	cases, err := services.GetWithdrawCasesByExpertUsername(username)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Get Withdraw Cases By ExpertID " + err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"cases": cases})
+}
+
 // ExportExcelCasesByUsernameHandler godoc
 // @Summary      导出专家所有病例
 // @Description  根据专家用户名导出所有病例
