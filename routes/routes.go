@@ -28,9 +28,9 @@ func InitRoutes(r *gin.Engine) {
 		// 认证相关路由
 		auth := api.Group("/auth")
 		{
-			auth.POST("/login", handlers.Login)
-			auth.GET("/current-user", middleware.JWTAuth(), handlers.GetCurrentUser)
-			auth.POST("/change-password", middleware.JWTAuth(), handlers.ChangePassword)
+			auth.POST("/login", handlers.Login)                                          // 登录
+			auth.GET("/current-user", middleware.JWTAuth(), handlers.GetCurrentUser)     // 获取当前登录用户信息
+			auth.POST("/change-password", middleware.JWTAuth(), handlers.ChangePassword) // 修改密码
 		}
 
 		// 需要认证的路由组

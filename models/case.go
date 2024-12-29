@@ -54,14 +54,16 @@ type Case struct {
 	//关联附件
 	Attachments []Attachment `json:"attachments" gorm:"foreignKey:CaseID; references:CaseID"` //附件
 
-	ConsultationID string `json:"consultationID" gorm:"type:varchar(255)"` //会诊编号
-
 	//时间
-	SubmitAt   time.Time `json:"submitAt" gorm:"type:datetime;null"`   //提交时间
-	DiagnoseAt time.Time `json:"diagnoseAt" gorm:"type:datetime;null"` //诊断时间
+	SubmitAt time.Time `json:"submitAt" gorm:"type:datetime;null"` //提交时间
 
-	DiagnosisContent       string `json:"diagnosisContent"`       //诊断内容
-	ExpertDiagnosisOpinion string `json:"expertDiagnosisOpinion"` //专家诊断意见
+	//诊断相关
+	ConsultationID         string    `json:"consultationID" gorm:"type:varchar(255)"` //会诊编号
+	DiagnosisContent       string    `json:"diagnosisContent"`                        //诊断内容、诊断结果
+	ExpertDiagnosisOpinion string    `json:"expertDiagnosisOpinion"`                  //专家诊断意见
+	MirrorDescription      string    `json:"mirrorDescription"`                       //镜下描述
+	DiagnosisRemarks       string    `json:"diagnosisRemarks"`                        //诊断备注
+	DiagnoseAt             time.Time `json:"diagnoseAt" gorm:"type:datetime;null"`    //诊断时间
 
 	DeletedAt gorm.DeletedAt `json:"-" swaggerignore:"true"` // 软删除时间
 }
