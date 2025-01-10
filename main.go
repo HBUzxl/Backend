@@ -53,8 +53,12 @@ func main() {
 		MaxAge:           12 * time.Hour,
 	}))
 
+	// 设置静态文件路由
+	r.Static("/uploads", "./uploads")
+
 	// 初始化路由
 	routes.InitRoutes(r)
+
 	// 启动服务
 	log.Println("服务启动在端口 8085...")
 	if err := r.Run(":8085"); err != nil {
