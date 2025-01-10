@@ -4,6 +4,7 @@ import (
 	"backend/config"
 	"backend/models"
 	"strconv"
+	"time"
 
 	"github.com/xuri/excelize/v2"
 )
@@ -232,4 +233,19 @@ func GetAppointmentsByUsername(username string) ([]models.Appointment, error) {
 		return nil, tx.Error
 	}
 	return appointments, nil
+}
+
+// DiagnoseCase 专家诊断病例
+func DiagnoseCase(caseID, expertDiagnosisOpinion, diagnosisContent, diagnosisRemarks string) error {
+	var caseData models.Case
+	err := config.DB.Where("case_id = ?", caseID).First(&caseData).Error
+	if err != nil {
+		return err
+	}
+	caseData.ExpertDiagnosisOpinion = expertDiagnosisOpinion
+	caseData.DiagnosisContent = diagnosisContent
+	caseData.DiagnosisRemarks = diagnosisRemarks
+	caseData.CaseStatus = "diagnosed"
+	caseData.DiagnoseAt = time.Now()
+	return config.DB.Save(&caseData).Error
 }

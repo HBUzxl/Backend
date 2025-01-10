@@ -214,3 +214,36 @@ func GetAppointmentsByUsernameHandler(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"appointments": appointments})
 }
+
+type DiagnoseCaseRequest struct {
+	CaseID                 string `json:"caseID"`
+	ExpertDiagnosisOpinion string `json:"expertDiagnosisOpinion"`
+	DiagnosisContent       string `json:"diagnosisContent"`
+	DiagnosisRemarks       string `json:"diagnosisRemarks"`
+}
+
+// DiagnoseCaseHandler handles diagnosing a case
+// @Summary      诊断病例
+// @Description  诊断病例
+// @Tags         cases
+// @Accept       json
+// @Produce      json
+// @Param        caseID  path      string  true  "病例ID"
+// @Success      200  {object}  map[string]string
+// @Failure      400  {object}  map[string]string
+// @Failure      500  {object}  map[string]string
+// @Router       /api/expert/diagnose [post]
+// @Security     Bearer
+func DiagnoseCaseHandler(c *gin.Context) {
+	var req DiagnoseCaseRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		return
+	}
+	err := services.DiagnoseCase(req.CaseID, req.ExpertDiagnosisOpinion, req.DiagnosisContent, req.DiagnosisRemarks)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Diagnose Case " + err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Diagnose Case Success"})
+}
