@@ -7,4 +7,5 @@ type Slice struct {
 	FilePath string `json:"filePath" gorm:"type:varchar(255)"` // 文件路径
 	FileSize int64  `json:"fileSize"`                          // 文件大小
 	CaseID   string `json:"caseID" gorm:"type:varchar(255)"`   // 病例ID
+	FileUrl  string `json:"fileUrl" gorm:"type:varchar(255)"`  // 文件URL
 }

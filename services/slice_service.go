@@ -21,7 +21,18 @@ func UploadSlice(file *multipart.FileHeader, sliceID string, caseID string) (*mo
 
 	// 2. 生成文件名
 	filename := sliceID
-	filePath := filepath.Join(uploadDir, filename)
+
+	// 获取绝对路径用于文件存储
+	absUploadDir, err := filepath.Abs(filepath.Join("uploads", "slices", "case_"+caseID))
+	if err != nil {
+		return nil, fmt.Errorf("获取绝对路径失败: %w", err)
+	}
+
+	// 文件的绝对存储路径
+	filePath := filepath.Join(absUploadDir, filename)
+
+	// URL路径（使用正斜杠，不使用系统路径分隔符）
+	fileUrl := fmt.Sprintf("/uploads/slices/case_%s/%s", caseID, filename)
 
 	// 3. 保存文件
 	src, err := file.Open()
@@ -46,9 +57,10 @@ func UploadSlice(file *multipart.FileHeader, sliceID string, caseID string) (*mo
 	slice := &models.Slice{
 		SliceID:  sliceID,
 		FileName: file.Filename,
-		FilePath: filePath,
+		FilePath: filePath, // 存储绝对路径
 		FileSize: file.Size,
 		CaseID:   caseID,
+		FileUrl:  fileUrl, // 存储URL路径
 	}
 
 	// 5. 保存到数据库
