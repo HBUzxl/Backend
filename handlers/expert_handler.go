@@ -220,6 +220,7 @@ type DiagnoseCaseRequest struct {
 	ExpertDiagnosisOpinion string `json:"expertDiagnosisOpinion"`
 	DiagnosisContent       string `json:"diagnosisContent"`
 	DiagnosisRemarks       string `json:"diagnosisRemarks"`
+	MirrorDescription      string `json:"mirrorDescription"`
 }
 
 // DiagnoseCaseHandler handles diagnosing a case
@@ -240,7 +241,11 @@ func DiagnoseCaseHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
 		return
 	}
-	err := services.DiagnoseCase(req.CaseID, req.ExpertDiagnosisOpinion, req.DiagnosisContent, req.DiagnosisRemarks)
+
+	// 打印接收到的请求数据
+	fmt.Printf("Received request data: %+v\n", req)
+
+	err := services.DiagnoseCase(req.CaseID, req.ExpertDiagnosisOpinion, req.DiagnosisContent, req.DiagnosisRemarks, req.MirrorDescription)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Diagnose Case " + err.Error()})
 		return

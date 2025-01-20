@@ -3,6 +3,7 @@ package services
 import (
 	"backend/config"
 	"backend/models"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -236,16 +237,33 @@ func GetAppointmentsByUsername(username string) ([]models.Appointment, error) {
 }
 
 // DiagnoseCase 专家诊断病例
-func DiagnoseCase(caseID, expertDiagnosisOpinion, diagnosisContent, diagnosisRemarks string) error {
+func DiagnoseCase(caseID, expertDiagnosisOpinion, diagnosisContent, diagnosisRemarks, mirrorDescription string) error {
 	var caseData models.Case
 	err := config.DB.Where("case_id = ?", caseID).First(&caseData).Error
 	if err != nil {
 		return err
 	}
+
+	// 打印更新前的数据
+	fmt.Printf("Before update - Case data: %+v\n", caseData)
+
 	caseData.ExpertDiagnosisOpinion = expertDiagnosisOpinion
 	caseData.DiagnosisContent = diagnosisContent
 	caseData.DiagnosisRemarks = diagnosisRemarks
 	caseData.CaseStatus = "diagnosed"
+	caseData.MirrorDescription = mirrorDescription
 	caseData.DiagnoseAt = time.Now()
-	return config.DB.Save(&caseData).Error
+
+	// 打印更新后的数据
+	fmt.Printf("After update - Case data: %+v\n", caseData)
+	fmt.Printf("Mirror Description value: %q\n", mirrorDescription)
+
+	result := config.DB.Save(&caseData)
+	if result.Error != nil {
+		fmt.Printf("Database error: %v\n", result.Error)
+		return result.Error
+	}
+	fmt.Printf("Rows affected: %d\n", result.RowsAffected)
+
+	return nil
 }
