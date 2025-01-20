@@ -135,3 +135,15 @@ go run main.go
 - 文件上传大小限制：50MB
 - Excel导出功能会自动格式化日期和状态信息
 
+```
+uploads/
+└── slices/
+    └── case_{caseID}/
+        ├── original/            # 存放原始SVS文件
+        │   └── {sliceID}.svs
+        └── dzi/                # 存放转换后的DZI文件
+            └── {sliceID}/      # DZI文件夹
+                ├── {sliceID}.dzi
+                └── {sliceID}_files/
+    
+```

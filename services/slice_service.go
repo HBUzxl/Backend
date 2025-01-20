@@ -14,25 +14,25 @@ import (
 func UploadSlice(file *multipart.FileHeader, sliceID string, caseID string) (*models.Slice, error) {
 
 	// 1. 创建上传目录
-	uploadDir := filepath.Join("uploads", "slices", "case_"+caseID)
+	uploadDir := filepath.Join("uploads", "slices", "case_"+caseID, "original")
 	if err := os.MkdirAll(uploadDir, 0755); err != nil {
 		return nil, fmt.Errorf("创建上传目录失败: %w", err)
 	}
 
-	// 2. 生成文件名
-	filename := sliceID
+	// 2. 生成文件名（添加.svs扩展名）
+	filename := sliceID + ".svs"
 
 	// 获取绝对路径用于文件存储
-	absUploadDir, err := filepath.Abs(filepath.Join("uploads", "slices", "case_"+caseID))
+	absUploadDir, err := filepath.Abs(filepath.Join("uploads", "slices", "case_"+caseID, "original"))
 	if err != nil {
 		return nil, fmt.Errorf("获取绝对路径失败: %w", err)
 	}
 
-	// 文件的绝对存储路径
+	// 原始文件的绝对存储路径
 	filePath := filepath.Join(absUploadDir, filename)
 
 	// URL路径（使用正斜杠，不使用系统路径分隔符）
-	fileUrl := fmt.Sprintf("/uploads/slices/case_%s/%s", caseID, filename)
+	fileUrl := fmt.Sprintf("/uploads/slices/case_%s/original/%s", caseID, filename)
 
 	// 3. 保存文件
 	src, err := file.Open()
@@ -57,10 +57,11 @@ func UploadSlice(file *multipart.FileHeader, sliceID string, caseID string) (*mo
 	slice := &models.Slice{
 		SliceID:  sliceID,
 		FileName: file.Filename,
-		FilePath: filePath, // 存储绝对路径
+		FilePath: filePath, // 存储原始文件的绝对路径
 		FileSize: file.Size,
 		CaseID:   caseID,
-		FileUrl:  fileUrl, // 存储URL路径
+		FileUrl:  fileUrl,   // 存储原始文件的URL路径
+		Status:   "pending", // 设置初始状态为待处理
 	}
 
 	// 5. 保存到数据库
