@@ -97,12 +97,17 @@ func ConvertSVStoDZI(slice *models.Slice) error {
 	}
 
 	// 2. 获取切片信息
-	cmd := exec.Command("vips", "header", slice.FilePath)
+	cmd := exec.Command("vipsheader", slice.FilePath)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		slice.Status = "convert_failed"
-		config.DB.Save(slice)
-		return fmt.Errorf("获取切片信息失败: %s, %w", string(output), err)
+		// 尝试使用替代命令
+		cmd = exec.Command("vips", "im_header", slice.FilePath)
+		output, err = cmd.CombinedOutput()
+		if err != nil {
+			slice.Status = "convert_failed"
+			config.DB.Save(slice)
+			return fmt.Errorf("获取切片信息失败: %s, %w", string(output), err)
+		}
 	}
 
 	// 解析输出获取宽度和高度
@@ -146,18 +151,28 @@ func ConvertSVStoDZI(slice *models.Slice) error {
 
 	// 6. 执行转换
 	cmd = exec.Command("vips", "dzsave", slice.FilePath, dziPath)
-	fmt.Println(cmd.Args)
+	fmt.Printf("执行转换命令: %v\n", cmd.Args)
 	if output, err := cmd.CombinedOutput(); err != nil {
 		slice.Status = "convert_failed"
 		config.DB.Save(slice)
 		return fmt.Errorf("转换失败: %s, %w", string(output), err)
 	}
 
+	// 检查DZI文件是否存在
+	if _, err := os.Stat(dziPath + ".dzi"); os.IsNotExist(err) {
+		slice.Status = "convert_failed"
+		config.DB.Save(slice)
+		return fmt.Errorf("DZI文件未生成: %s", dziPath+".dzi")
+	}
+
 	// 7. 更新切片记录
 	dziUrl := fmt.Sprintf("/uploads/slices/case_%s/dzi/%s", slice.CaseID, dziFileName)
-	slice.DZIPath = dziPath
-	slice.DZIUrl = dziUrl
+	slice.DZIPath = dziPath + ".dzi" // 添加.dzi扩展名
+	slice.DZIUrl = dziUrl + ".dzi"   // 添加.dzi扩展名
 	slice.Status = "converted"
+
+	fmt.Printf("转换完成:\n - 原始文件: %s\n - DZI文件: %s\n - DZI URL: %s\n",
+		slice.FilePath, slice.DZIPath, slice.DZIUrl)
 
 	// 8. 保存更新到数据库
 	if err := config.DB.Save(slice).Error; err != nil {
