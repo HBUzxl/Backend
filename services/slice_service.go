@@ -9,6 +9,8 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -94,26 +96,56 @@ func ConvertSVStoDZI(slice *models.Slice) error {
 		return fmt.Errorf("更新状态失败: %w", err)
 	}
 
-	// 2. 创建DZI目录结构
+	// 2. 获取切片信息
+	cmd := exec.Command("vips", "header", slice.FilePath)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		slice.Status = "convert_failed"
+		config.DB.Save(slice)
+		return fmt.Errorf("获取切片信息失败: %s, %w", string(output), err)
+	}
+
+	// 解析输出获取宽度和高度
+	headerInfo := string(output)
+	width, height := 0, 0
+	magnification := 40 // 默认40倍，因为vips可能无法直接获取放大倍数
+
+	// 使用正则表达式匹配宽度和高度
+	widthRe := regexp.MustCompile(`width: (\d+)`)
+	heightRe := regexp.MustCompile(`height: (\d+)`)
+
+	if matches := widthRe.FindStringSubmatch(headerInfo); len(matches) > 1 {
+		width, _ = strconv.Atoi(matches[1])
+	}
+	if matches := heightRe.FindStringSubmatch(headerInfo); len(matches) > 1 {
+		height, _ = strconv.Atoi(matches[1])
+	}
+
+	// 更新切片信息
+	slice.Width = width
+	slice.Height = height
+	slice.Magnification = magnification
+
+	// 3. 创建DZI目录结构
 	caseDir := filepath.Join("uploads", "slices", "case_"+slice.CaseID)
 	dziDir := filepath.Join(caseDir, "dzi")
 	if err := os.MkdirAll(dziDir, 0755); err != nil {
 		return fmt.Errorf("创建DZI目录失败: %w", err)
 	}
 
-	// 3. 获取DZI输出目录的绝对路径
+	// 4. 获取DZI输出目录的绝对路径
 	absDZIDir, err := filepath.Abs(dziDir)
 	if err != nil {
 		return fmt.Errorf("获取DZI目录绝对路径失败: %w", err)
 	}
 
-	// 4. 准备文件名
+	// 5. 准备文件名
 	baseFileName := strings.TrimSuffix(slice.FileName, filepath.Ext(slice.FileName))
 	dziFileName := baseFileName
 	dziPath := filepath.Join(absDZIDir, dziFileName)
 
-	// 5. 执行转换
-	cmd := exec.Command("vips", "dzsave", slice.FilePath, dziPath)
+	// 6. 执行转换
+	cmd = exec.Command("vips", "dzsave", slice.FilePath, dziPath)
 	fmt.Println(cmd.Args)
 	if output, err := cmd.CombinedOutput(); err != nil {
 		slice.Status = "convert_failed"
@@ -121,13 +153,13 @@ func ConvertSVStoDZI(slice *models.Slice) error {
 		return fmt.Errorf("转换失败: %s, %w", string(output), err)
 	}
 
-	// 6. 更新切片记录
+	// 7. 更新切片记录
 	dziUrl := fmt.Sprintf("/uploads/slices/case_%s/dzi/%s", slice.CaseID, dziFileName)
 	slice.DZIPath = dziPath
 	slice.DZIUrl = dziUrl
 	slice.Status = "converted"
 
-	// 7. 保存更新到数据库
+	// 8. 保存更新到数据库
 	if err := config.DB.Save(slice).Error; err != nil {
 		return fmt.Errorf("更新切片记录失败: %w", err)
 	}
