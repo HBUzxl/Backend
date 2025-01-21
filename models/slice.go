@@ -17,10 +17,10 @@ type Slice struct {
 	FileUrl  string `json:"fileUrl" gorm:"type:varchar(255)"`  // 文件URL
 
 	DZIPath       string `json:"dziPath" gorm:"type:varchar(255)"` // DZI文件路径
+	DZIUrl        string `json:"dziUrl" gorm:"type:varchar(255)"`  // DZI文件URL
 	Width         int    `json:"width"`                            // 切片宽度
 	Height        int    `json:"height"`                           // 切片高度
 	Magnification int    `json:"magnification"`                    // 放大倍数
-	DZIUrl        string `json:"dziUrl" gorm:"type:varchar(255)"`  // DZI文件URL
 
 	Status string `json:"status"` // 切片转换状态
 

@@ -3,6 +3,7 @@ package services
 import (
 	"backend/config"
 	"backend/models"
+	"database/sql"
 	"fmt"
 	"strconv"
 	"time"
@@ -189,7 +190,10 @@ func ExportExcelCasesByUsername(username string) ([]byte, error) {
 		row := i + 2
 
 		submitTime := caseData.SubmitAt.Format("2006-01-02 15:04:05")
-		diagnoseTime := caseData.DiagnoseAt.Format("2006-01-02 15:04:05")
+		diagnoseTime := ""
+		if caseData.DiagnoseAt.Valid {
+			diagnoseTime = caseData.DiagnoseAt.Time.Format("2006-01-02 15:04:05")
+		}
 
 		f.SetCellValue(sheetName, "A"+strconv.Itoa(row), i+1)
 		f.SetCellValue(sheetName, "B"+strconv.Itoa(row), caseData.ConsultationID)
@@ -252,7 +256,7 @@ func DiagnoseCase(caseID, expertDiagnosisOpinion, diagnosisContent, diagnosisRem
 	caseData.DiagnosisRemarks = diagnosisRemarks
 	caseData.CaseStatus = "diagnosed"
 	caseData.MirrorDescription = mirrorDescription
-	caseData.DiagnoseAt = time.Now()
+	caseData.DiagnoseAt = sql.NullTime{Time: time.Now(), Valid: true}
 
 	// 打印更新后的数据
 	fmt.Printf("After update - Case data: %+v\n", caseData)

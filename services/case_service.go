@@ -3,6 +3,7 @@ package services
 import (
 	"backend/config"
 	"backend/models"
+	"database/sql"
 	"fmt"
 	"time"
 
@@ -193,9 +194,8 @@ func SubmitCase(caseData *models.Case) error {
 			// 设置提交时间为当前时间
 			currentTime := time.Now()
 			caseData.SubmitAt = currentTime
-			// 初始化诊断时间为空值
-			var zeroTime time.Time
-			caseData.DiagnoseAt = zeroTime
+			// 初始化诊断时间为 null
+			caseData.DiagnoseAt = sql.NullTime{Valid: false}
 
 			if err := tx.Create(caseData).Error; err != nil {
 				tx.Rollback()
@@ -215,10 +215,9 @@ func SubmitCase(caseData *models.Case) error {
 		if existingCase.CaseStatus != caseData.CaseStatus {
 			if caseData.CaseStatus == "unsubmitted" {
 				caseData.SubmitAt = currentTime
-				var zeroTime time.Time
-				caseData.DiagnoseAt = zeroTime
+				caseData.DiagnoseAt = sql.NullTime{Valid: false}
 			} else if caseData.CaseStatus == "diagnosed" {
-				caseData.DiagnoseAt = currentTime
+				caseData.DiagnoseAt = sql.NullTime{Time: currentTime, Valid: true}
 			}
 		}
 
@@ -226,7 +225,7 @@ func SubmitCase(caseData *models.Case) error {
 		if caseData.SubmitAt.IsZero() {
 			caseData.SubmitAt = existingCase.SubmitAt
 		}
-		if caseData.DiagnoseAt.IsZero() {
+		if !caseData.DiagnoseAt.Valid {
 			caseData.DiagnoseAt = existingCase.DiagnoseAt
 		}
 
