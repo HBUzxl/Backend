@@ -252,3 +252,20 @@ func DiagnoseCaseHandler(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Diagnose Case Success"})
 }
+
+// GetCaseCounts 获取专家的各类病例数量
+func GetCaseCounts(c *gin.Context) {
+	expertID := c.GetString("userID")
+	if expertID == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "未授权"})
+		return
+	}
+
+	counts, err := services.GetCaseCounts(expertID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, counts)
+}

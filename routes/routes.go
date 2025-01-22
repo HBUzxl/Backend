@@ -85,6 +85,7 @@ func InitRoutes(r *gin.Engine) {
 				expertGroup.GET("/excel/:username", handlers.ExportExcelCasesByUsernameHandler)       // 导出Excel，根据专家用户名获取待诊断的病例
 				expertGroup.GET("/:username/appointments", handlers.GetAppointmentsByUsernameHandler) // 根据专家用户名获取预约
 				expertGroup.POST("/diagnose", handlers.DiagnoseCaseHandler)                           // 专家诊断病例
+				expertGroup.GET("/case-counts", handlers.GetCaseCounts)                               // 获取病例计数
 			}
 
 			// 切片相关路由

@@ -271,3 +271,54 @@ func DiagnoseCase(caseID, expertDiagnosisOpinion, diagnosisContent, diagnosisRem
 
 	return nil
 }
+
+// CaseCounts 病例计数结构
+type CaseCounts struct {
+	PendingCount   int `json:"pendingCount"`   // 待诊断
+	DiagnosedCount int `json:"diagnosedCount"` // 已诊断
+	ReturnedCount  int `json:"returnedCount"`  // 已退回
+	WithdrawnCount int `json:"withdrawnCount"` // 已撤回
+}
+
+// GetCaseCounts 获取专家的各类病例数量
+func GetCaseCounts(expertID string) (*CaseCounts, error) {
+	counts := &CaseCounts{}
+
+	// 获取待诊断病例数量
+	var pendingCount int64
+	if err := config.DB.Model(&models.Case{}).
+		Where("expert_id = ? AND case_status = ?", expertID, "pendingdiagnosis").
+		Count(&pendingCount).Error; err != nil {
+		return nil, err
+	}
+	counts.PendingCount = int(pendingCount)
+
+	// 获取已诊断病例数量
+	var diagnosedCount int64
+	if err := config.DB.Model(&models.Case{}).
+		Where("expert_id = ? AND case_status = ?", expertID, "diagnosed").
+		Count(&diagnosedCount).Error; err != nil {
+		return nil, err
+	}
+	counts.DiagnosedCount = int(diagnosedCount)
+
+	// 获取已退回病例数量
+	var returnedCount int64
+	if err := config.DB.Model(&models.Case{}).
+		Where("expert_id = ? AND case_status = ?", expertID, "returned").
+		Count(&returnedCount).Error; err != nil {
+		return nil, err
+	}
+	counts.ReturnedCount = int(returnedCount)
+
+	// 获取已撤回病例数量
+	var withdrawnCount int64
+	if err := config.DB.Model(&models.Case{}).
+		Where("expert_id = ? AND case_status = ?", expertID, "withdraw").
+		Count(&withdrawnCount).Error; err != nil {
+		return nil, err
+	}
+	counts.WithdrawnCount = int(withdrawnCount)
+
+	return counts, nil
+}
