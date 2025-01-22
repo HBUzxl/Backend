@@ -255,13 +255,13 @@ func DiagnoseCaseHandler(c *gin.Context) {
 
 // GetCaseCounts 获取专家的各类病例数量
 func GetCaseCounts(c *gin.Context) {
-	expertID := c.GetString("userID")
-	if expertID == "" {
+	username := c.GetString("username")
+	if username == "" {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "未授权"})
 		return
 	}
 
-	counts, err := services.GetCaseCounts(expertID)
+	counts, err := services.GetCaseCounts(username)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
